@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Súper Mercadito</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+  <style>
+    :root { --sidebar-w: 240px; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; }
+
+    /* LOGIN */
+    #loginPage { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#1a6fc4,#0d3e6e); }
+    .login-card { background:#fff; border-radius:16px; padding:2.5rem; width:100%; max-width:400px; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+    .login-logo { font-size:3rem; text-align:center; margin-bottom:.5rem; }
+
+    /* APP LAYOUT */
+    #appPage { display:none; }
+    .sidebar { position:fixed; top:0; left:0; height:100vh; width:var(--sidebar-w); background:#0d3e6e; color:#fff; overflow-y:auto; z-index:100; transition:.3s; }
+    .sidebar .brand { padding:1.5rem 1.2rem 1rem; border-bottom:1px solid rgba(255,255,255,.15); font-size:1.1rem; font-weight:700; }
+    .sidebar .nav-link { color:rgba(255,255,255,.8); padding:.65rem 1.2rem; border-radius:8px; margin:.2rem .6rem; display:flex; align-items:center; gap:.6rem; transition:.2s; }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active { background:rgba(255,255,255,.15); color:#fff; }
+    .sidebar .nav-section { font-size:.7rem; text-transform:uppercase; color:rgba(255,255,255,.4); padding:.8rem 1.2rem .2rem; letter-spacing:.08em; }
+
+    .topbar { position:fixed; top:0; left:var(--sidebar-w); right:0; height:60px; background:#fff; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; padding:0 1.5rem; z-index:99; gap:1rem; }
+    .topbar .page-title { font-weight:600; font-size:1.1rem; flex:1; }
+
+    .main-content { margin-left:var(--sidebar-w); margin-top:60px; padding:1.5rem; min-height:calc(100vh - 60px); }
+
+    /* CARDS */
+    .stat-card { background:#fff; border-radius:12px; padding:1.4rem; border:1px solid #e5e7eb; }
+    .stat-card .icon-wrap { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
+    .stat-card .value { font-size:1.8rem; font-weight:700; line-height:1; }
+    .stat-card .label { color:#6b7280; font-size:.85rem; margin-top:.25rem; }
+
+    /* POS */
+    .pos-product-card { cursor:pointer; border:2px solid transparent; border-radius:10px; padding:.8rem; transition:.2s; }
+    .pos-product-card:hover { border-color:#1a6fc4; background:#f0f7ff; }
+    .pos-product-card.stock-low { opacity:.6; }
+    .cart-item { display:flex; align-items:center; gap:.5rem; padding:.5rem 0; border-bottom:1px solid #f0f0f0; }
+
+    .badge-rol-admin { background:#dbeafe; color:#1d4ed8; }
+    .badge-rol-cajero { background:#dcfce7; color:#16a34a; }
+
+    /* ALERT STOCK */
+    .stock-alert-bar { background:#fef3c7; border-left:4px solid #f59e0b; padding:.6rem 1rem; border-radius:6px; font-size:.875rem; }
+
+    /* TABLES */
+    .table th { background:#f8fafc; font-weight:600; font-size:.85rem; text-transform:uppercase; letter-spacing:.03em; }
+    .table td { vertical-align:middle; }
+
+    /* VIEWS */
+    .view { display:none; }
+    .view.active { display:block; }
+
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { transform: translateX(-240px); }
+      .sidebar.open { transform: translateX(0); width:240px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">🛒</div>
+    <h4 class="text-center mb-1 fw-bold">Súper Mercadito</h4>
+    <p class="text-center text-muted small mb-4">Sistema de Gestión de Inventario</p>
+    <div id="loginError" class="alert alert-danger d-none"></div>
+    <div class="mb-3">
+      <label class="form-label fw-semibold">Correo electrónico</label>
+      <input id="loginCorreo" type="email" class="form-control" placeholder="admin@mercadito.com"/>
+    </div>
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Contraseña</label>
+      <input id="loginPassword" type="password" class="form-control" placeholder="••••••••"/>
+    </div>
+    <button onclick="hacerLogin()" class="btn btn-primary w-100 py-2 fw-semibold">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+    </button>
+    <p class="text-center text-muted small mt-3">v1.0 · Análisis de Sistemas I · UMG 2026</p>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="appPage">
+  <!-- Sidebar -->
+  <nav class="sidebar" id="sidebar">
+    <div class="brand"><i class="bi bi-cart3 me-2"></i>Súper Mercadito</div>
+    <div class="pt-2">
+      <div class="nav-section">Principal</div>
+      <a class="nav-link active" onclick="mostrarVista('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a class="nav-link" onclick="mostrarVista('pos')"><i class="bi bi-upc-scan"></i> Punto de Venta</a>
+
+      <div class="nav-section">Inventario</div>
+      <a class="nav-link" onclick="mostrarVista('productos')"><i class="bi bi-box-seam"></i> Productos</a>
+      <a class="nav-link" onclick="mostrarVista('categorias')"><i class="bi bi-tags"></i> Categorías</a>
+
+      <div class="nav-section" id="navAdminSection">Administración</div>
+      <a class="nav-link" id="navCompras" onclick="mostrarVista('compras')"><i class="bi bi-truck"></i> Compras</a>
+      <a class="nav-link" id="navProveedores" onclick="mostrarVista('proveedores')"><i class="bi bi-building"></i> Proveedores</a>
+      <a class="nav-link" id="navClientes" onclick="mostrarVista('clientes')"><i class="bi bi-people"></i> Clientes</a>
+      <a class="nav-link" id="navReportes" onclick="mostrarVista('reportes')"><i class="bi bi-bar-chart-line"></i> Reportes</a>
+      <a class="nav-link" id="navUsuarios" onclick="mostrarVista('usuarios')"><i class="bi bi-person-gear"></i> Usuarios</a>
+
+      <div class="nav-section">Sesión</div>
+      <a class="nav-link text-danger" onclick="cerrarSesion()"><i class="bi bi-box-arrow-left"></i> Cerrar sesión</a>
+    </div>
+  </nav>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <button class="btn btn-sm btn-outline-secondary d-md-none" onclick="document.getElementById('sidebar').classList.toggle('open')">
+      <i class="bi bi-list"></i>
+    </button>
+    <span class="page-title" id="pageTitle">Dashboard</span>
+    <div id="stockAlertBadge" class="d-none">
+      <span class="badge bg-warning text-dark"><i class="bi bi-exclamation-triangle me-1"></i><span id="stockAlertCount">0</span> con stock bajo</span>
+    </div>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <span class="badge rounded-pill" id="badgeRol">Cajero</span>
+      <span class="fw-semibold small" id="topbarNombre">Usuario</span>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- DASHBOARD -->
+    <div id="view-dashboard" class="view active">
+      <div id="stockAlertBar" class="stock-alert-bar mb-3 d-none">
+        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+        <strong id="alertCount">0</strong> productos con stock bajo o agotado.
+        <a href="#" onclick="mostrarVista('productos')" class="ms-1">Ver productos</a>
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="d-flex align-items-center gap-3">
+              <div class="icon-wrap bg-primary bg-opacity-10 text-primary"><i class="bi bi-receipt"></i></div>
+              <div>
+                <div class="value" id="statVentasHoy">-</div>
+                <div class="label">Ventas hoy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="d-flex align-items-center gap-3">
+              <div class="icon-wrap bg-success bg-opacity-10 text-success"><i class="bi bi-currency-dollar"></i></div>
+              <div>
+                <div class="value" id="statIngresosHoy">-</div>
+                <div class="label">Ingresos hoy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="d-flex align-items-center gap-3">
+              <div class="icon-wrap bg-info bg-opacity-10 text-info"><i class="bi bi-box-seam"></i></div>
+              <div>
+                <div class="value" id="statProductos">-</div>
+                <div class="label">Productos activos</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="d-flex align-items-center gap-3">
+              <div class="icon-wrap bg-warning bg-opacity-10 text-warning"><i class="bi bi-exclamation-diamond"></i></div>
+              <div>
+                <div class="value text-warning" id="statStockBajo">-</div>
+                <div class="label">Stock bajo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="stat-card">
+            <h6 class="fw-bold mb-3"><i class="bi bi-exclamation-triangle text-warning me-2"></i>Productos con stock bajo</h6>
+            <div id="tablaStockBajo"><div class="text-muted text-center py-3">Cargando...</div></div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="stat-card">
+            <h6 class="fw-bold mb-3"><i class="bi bi-clock-history text-primary me-2"></i>Últimas ventas</h6>
+            <div id="tablaUltimasVentas"><div class="text-muted text-center py-3">Cargando...</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POS -->
+    <div id="view-pos" class="view">
+      <div class="row g-3">
+        <div class="col-lg-7">
+          <div class="stat-card mb-3">
+            <div class="d-flex gap-2">
+              <input id="posBuscar" type="text" class="form-control" placeholder="Buscar producto por nombre o código de barras..."
+                oninput="buscarProductoPOS(this.value)"/>
+              <button class="btn btn-outline-primary" onclick="buscarProductoPOS(document.getElementById('posBuscar').value)">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+            <div id="posResultados" class="row g-2 mt-1"></div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0"><i class="bi bi-cart3 me-2 text-primary"></i>Venta en curso</h6>
+              <button class="btn btn-sm btn-outline-danger" onclick="limpiarCarrito()"><i class="bi bi-trash"></i></button>
+            </div>
+            <div id="posCarrito" class="mb-3" style="max-height:280px;overflow-y:auto;">
+              <p class="text-muted text-center small py-3">Agrega productos desde la búsqueda</p>
+            </div>
+            <div class="border-top pt-2">
+              <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
+                <span>Total</span>
+                <span class="text-primary">Q <span id="posTotal">0.00</span></span>
+              </div>
+              <div class="mb-2">
+                <select id="posMetodoPago" class="form-select">
+                  <option value="">-- Método de pago --</option>
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Tarjeta">Tarjeta</option>
+                  <option value="Transferencia">Transferencia</option>
+                </select>
+              </div>
+              <button onclick="finalizarVenta()" class="btn btn-success w-100 fw-semibold py-2">
+                <i class="bi bi-check-circle me-2"></i>Finalizar Venta
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCTOS -->
+    <div id="view-productos" class="view">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div><input type="text" id="filtroProductos" class="form-control" placeholder="Buscar producto..." oninput="filtrarTablaProductos(this.value)" style="width:280px"/></div>
+        <button class="btn btn-primary" onclick="abrirModalProducto()"><i class="bi bi-plus-lg me-1"></i>Nuevo producto</button>
+      </div>
+      <div class="stat-card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Nombre</th><th>Categoría</th><th>P. Venta</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaProductos"><tr><td colspan="6" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIAS -->
+    <div id="view-categorias" class="view">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div><input type="text" id="filtroCategorias" class="form-control" placeholder="Buscar categoría..." oninput="filtrarTablaCategorias(this.value)" style="width:280px"/></div>
+        <button class="btn btn-primary" id="btnNuevaCategoria" onclick="abrirModalCategoria()"><i class="bi bi-plus-lg me-1"></i>Nueva categoría</button>
+      </div>
+      <div class="stat-card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Nombre</th><th>Productos activos</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaCategorias"><tr><td colspan="4" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="view-compras" class="view">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Registro de compras</h6>
+        <button class="btn btn-primary" onclick="abrirModalCompra()"><i class="bi bi-plus-lg me-1"></i>Nueva compra</button>
+      </div>
+      <div class="stat-card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>#</th><th>Fecha</th><th>Proveedor</th><th>Total</th><th>Estado</th></tr></thead>
+            <tbody id="tablaCompras"><tr><td colspan="5" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="view-proveedores" class="view">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Catálogo de proveedores</h6>
+        <button class="btn btn-primary" onclick="abrirModalProveedor()"><i class="bi bi-plus-lg me-1"></i>Nuevo proveedor</button>
+      </div>
+      <div class="stat-card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaProveedores"><tr><td colspan="4" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="view-clientes" class="view">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Clientes</h6>
+        <button class="btn btn-primary" onclick="abrirModalCliente()"><i class="bi bi-plus-lg me-1"></i>Nuevo cliente</button>
+      </div>
+      <div class="stat-card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaClientes"><tr><td colspan="4" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="view-reportes" class="view">
+      <div class="row g-3">
+        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Ventas diarias</h6><div id="reporteVentasDiarias" class="mt-2">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Productos más vendidos</h6><div id="reporteProductosVendidos" class="mt-2">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Stock bajo</h6><div id="reporteStockBajo" class="mt-2">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Compras por proveedor</h6><div id="reporteComprasProveedor" class="mt-2">Cargando...</div></div></div>
+      </div>
+    </div>
+    <div id="view-usuarios" class="view">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="fw-bold mb-0">Gestión de usuarios</h6>
+        <button class="btn btn-primary" onclick="abrirModalUsuario()"><i class="bi bi-plus-lg me-1"></i>Nuevo usuario</button>
+      </div>
+      <div class="stat-card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaUsuarios"><tr><td colspan="5" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /appPage -->
+
+<!-- MODAL Producto -->
+<div class="modal fade" id="modalProducto" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="modalProductoTitulo">Nuevo Producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="prodId"/>
+        <div class="row g-3">
+          <div class="col-12"><label class="form-label">Nombre *</label><input id="prodNombre" class="form-control" required/></div>
+          <div class="col-md-6"><label class="form-label">Precio Compra (Q) *</label><input id="prodPrecioCompra" type="number" step="0.01" class="form-control"/></div>
+          <div class="col-md-6"><label class="form-label">Precio Venta (Q) *</label><input id="prodPrecioVenta" type="number" step="0.01" class="form-control"/></div>
+          <div class="col-md-6"><label class="form-label">Stock Inicial</label><input id="prodStock" type="number" class="form-control" value="0"/></div>
+          <div class="col-md-6"><label class="form-label">Stock Mínimo</label><input id="prodStockMin" type="number" class="form-control" value="5"/></div>
+          <div class="col-md-6"><label class="form-label">Código de Barras</label><input id="prodCodigo" class="form-control"/></div>
+          <div class="col-md-6">
+            <label class="form-label">Categoría *</label>
+            <select id="prodCategoria" class="form-select">
+              <option value="">Cargando categorías...</option>
+            </select>
+          </div>
+          <div class="col-12"><label class="form-label">Descripción</label><textarea id="prodDescripcion" class="form-control" rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarProducto()"><i class="bi bi-floppy me-1"></i>Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL Categoria -->
+<div class="modal fade" id="modalCategoria" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="modalCategoriaTitulo">Nueva Categoría</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="catId"/>
+        <div class="mb-2">
+          <label class="form-label">Nombre de categoría *</label>
+          <input id="catNombre" class="form-control" maxlength="100" placeholder="Ej. Abarrotes"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarCategoria()"><i class="bi bi-floppy me-1"></i>Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL Proveedor -->
+<div class="modal fade" id="modalProveedor" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="modalProveedorTitulo">Nuevo Proveedor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="provId"/>
+        <div class="mb-2"><label class="form-label">Nombre *</label><input id="provNombre" class="form-control"/></div>
+        <div class="mb-2"><label class="form-label">Teléfono</label><input id="provTelefono" class="form-control"/></div>
+        <div class="mb-2"><label class="form-label">Correo</label><input id="provCorreo" type="email" class="form-control"/></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarProveedor()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL Cliente -->
+<div class="modal fade" id="modalCliente" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="modalClienteTitulo">Nuevo Cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="cliId"/>
+        <div class="mb-2"><label class="form-label">Nombre *</label><input id="cliNombre" class="form-control"/></div>
+        <div class="mb-2"><label class="form-label">Teléfono</label><input id="cliTelefono" class="form-control"/></div>
+        <div class="mb-2"><label class="form-label">Correo</label><input id="cliCorreo" type="email" class="form-control"/></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarCliente()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL Compra -->
+<div class="modal fade" id="modalCompra" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold">Nueva Compra</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label class="form-label">Proveedor *</label>
+            <select id="compraProveedor" class="form-select"></select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Producto *</label>
+            <select id="compraProducto" class="form-select"></select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Cantidad *</label>
+            <input id="compraCantidad" type="number" min="1" class="form-control" value="1"/>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Precio compra *</label>
+            <input id="compraPrecio" type="number" step="0.01" min="0.01" class="form-control"/>
+          </div>
+          <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-outline-primary w-100" onclick="agregarDetalleCompra()"><i class="bi bi-plus-circle me-1"></i>Agregar</button>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th><th></th></tr></thead>
+            <tbody id="tablaDetalleCompra"><tr><td colspan="5" class="text-center text-muted">Sin detalles</td></tr></tbody>
+          </table>
+        </div>
+        <div class="text-end fw-bold">Total: Q <span id="totalCompraPreview">0.00</span></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarCompra()">Guardar compra</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL Usuario -->
+<div class="modal fade" id="modalUsuario" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="modalUsuarioTitulo">Nuevo Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="usrId"/>
+        <div class="mb-2"><label class="form-label">Nombre *</label><input id="usrNombre" class="form-control"/></div>
+        <div class="mb-2"><label class="form-label">Correo *</label><input id="usrCorreo" type="email" class="form-control"/></div>
+        <div class="mb-2"><label class="form-label">Rol *</label><select id="usrRol" class="form-select"><option>Administrador</option><option>Cajero</option></select></div>
+        <div class="mb-2" id="usrPasswordWrap"><label class="form-label">Contraseña *</label><input id="usrPassword" type="password" class="form-control"/></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary" onclick="guardarUsuario()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const API = '/api';
+let token = null, usuario = null;
+let carritoItems = [], ventaActualId = null;
+let todosProductos = [];
+let todasCategorias = [];
+let todosProveedores = [];
+let todosClientes = [];
+let todosUsuarios = [];
+let detalleCompra = [];
+
+// ─── AUTH ────────────────────────────────────────────────────
+async function hacerLogin() {
+  const correo   = document.getElementById('loginCorreo').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errDiv   = document.getElementById('loginError');
+  try {
+    const r = await fetch(`${API}/auth/login`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ correo, password })
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || 'Error de autenticación');
+    token   = data.token;
+    usuario = data.usuario;
+    localStorage.setItem('sm_token', token);
+    localStorage.setItem('sm_usuario', JSON.stringify(usuario));
+    iniciarApp();
+  } catch (e) {
+    errDiv.textContent = e.message;
+    errDiv.classList.remove('d-none');
+  }
+}
+
+function cerrarSesion() {
+  token = null; usuario = null;
+  localStorage.removeItem('sm_token');
+  localStorage.removeItem('sm_usuario');
+  document.getElementById('appPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+}
+
+function iniciarApp() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('appPage').style.display = 'block';
+  document.getElementById('topbarNombre').textContent = usuario.nombre;
+  const badge = document.getElementById('badgeRol');
+  badge.textContent = usuario.rol;
+  badge.className = `badge rounded-pill badge-rol-${usuario.rol === 'Administrador' ? 'admin' : 'cajero'}`;
+  if (usuario.rol !== 'Administrador') {
+    ['navCompras','navProveedores','navReportes','navUsuarios'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }
+  cargarCategoriasEnSelect();
+  cargarDashboard();
+}
+
+// ─── API HELPER ──────────────────────────────────────────────
+async function api(path, opts = {}) {
+  const r = await fetch(`${API}${path}`, {
+    ...opts,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, ...opts.headers }
+  });
+  return r.json();
+}
+
+// ─── NAVEGACIÓN ──────────────────────────────────────────────
+function mostrarVista(nombre) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById(`view-${nombre}`).classList.add('active');
+  const titles = { dashboard:'Dashboard', pos:'Punto de Venta', productos:'Productos',
+    categorias:'Categorías', compras:'Compras', proveedores:'Proveedores',
+    clientes:'Clientes', reportes:'Reportes', usuarios:'Usuarios' };
+  document.getElementById('pageTitle').textContent = titles[nombre] || nombre;
+  if (nombre === 'productos') cargarProductos();
+  if (nombre === 'categorias') cargarCategorias();
+  if (nombre === 'pos') iniciarPOS();
+  if (nombre === 'compras') cargarCompras();
+  if (nombre === 'proveedores') cargarProveedores();
+  if (nombre === 'clientes') cargarClientes();
+  if (nombre === 'reportes') cargarReportes();
+  if (nombre === 'usuarios') cargarUsuarios();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────
+async function cargarDashboard() {
+  const productos = await api('/productos');
+  todosProductos  = productos;
+  document.getElementById('statProductos').textContent = productos.length;
+
+  const stockBajo = await api('/productos/stock-bajo');
+  document.getElementById('statStockBajo').textContent = stockBajo.length;
+  if (stockBajo.length > 0) {
+    document.getElementById('stockAlertBar').classList.remove('d-none');
+    document.getElementById('alertCount').textContent = stockBajo.length;
+    document.getElementById('stockAlertBadge').classList.remove('d-none');
+    document.getElementById('stockAlertCount').textContent = stockBajo.length;
+  }
+
+  // Tabla stock bajo
+  const tbSB = document.getElementById('tablaStockBajo');
+  if (!stockBajo.length) { tbSB.innerHTML = '<p class="text-muted text-center small py-2">Sin alertas de stock 🎉</p>'; }
+  else {
+    tbSB.innerHTML = `<table class="table table-sm mb-0"><thead><tr><th>Producto</th><th>Stock</th><th>Mínimo</th></tr></thead><tbody>
+      ${stockBajo.map(p => `<tr><td>${p.nombre}</td><td class="text-danger fw-bold">${p.stock_actual}</td><td>${p.stock_minimo}</td></tr>`).join('')}
+    </tbody></table>`;
+  }
+
+  // Ventas del día desde reporte (si admin)
+  if (usuario.rol === 'Administrador') {
+    const hoy = new Date().toISOString().split('T')[0];
+    const ventas = await api(`/ventas/reporte?inicio=${hoy}T00:00:00&fin=${hoy}T23:59:59`);
+    document.getElementById('statVentasHoy').textContent = ventas.length;
+    const total = ventas.reduce((s, v) => s + (v.total_venta || 0), 0);
+    document.getElementById('statIngresosHoy').textContent = `Q ${total.toFixed(2)}`;
+    document.getElementById('tablaUltimasVentas').innerHTML = ventas.length
+      ? `<table class="table table-sm mb-0"><thead><tr><th>#</th><th>Cajero</th><th>Total</th><th>Pago</th></tr></thead><tbody>
+          ${ventas.slice(0,5).map(v=>`<tr><td>${v.id_venta}</td><td>${v.cajero||'-'}</td><td>Q ${(v.total_venta||0).toFixed(2)}</td><td>${v.metodo_pago||'-'}</td></tr>`).join('')}
+         </tbody></table>`
+      : '<p class="text-muted text-center small py-2">Sin ventas hoy</p>';
+  } else {
+    document.getElementById('statVentasHoy').textContent = '-';
+    document.getElementById('statIngresosHoy').textContent = '-';
+    document.getElementById('tablaUltimasVentas').innerHTML = '<p class="text-muted text-center small py-2">Solo disponible para administradores</p>';
+  }
+}
+
+// ─── PRODUCTOS ───────────────────────────────────────────────
+async function cargarProductos() {
+  const productos = await api('/productos');
+  todosProductos  = productos;
+  renderTablaProductos(productos);
+}
+
+function renderTablaProductos(productos) {
+  const tbody = document.getElementById('tablaProductos');
+  if (!productos.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3 text-muted">Sin productos</td></tr>'; return; }
+  tbody.innerHTML = productos.map(p => `
+    <tr>
+      <td><strong>${p.nombre}</strong><br><small class="text-muted">${p.codigo_barra||''}</small></td>
+      <td>${p.nombre_categoria||'-'}</td>
+      <td>Q ${(p.precio_venta||0).toFixed(2)}</td>
+      <td>${p.stock_actual <= p.stock_minimo
+        ? `<span class="badge bg-danger">${p.stock_actual}</span>`
+        : `<span class="badge bg-success">${p.stock_actual}</span>`
+      }</td>
+      <td><span class="badge bg-${p.estado ? 'success':'secondary'}">${p.estado ? 'Activo':'Inactivo'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalProducto(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-outline-danger" onclick="eliminarProducto(${p.id_producto})"><i class="bi bi-trash"></i></button>
+      </td>
+    </tr>`).join('');
+}
+
+function filtrarTablaProductos(q) {
+  const filtrados = todosProductos.filter(p =>
+    p.nombre.toLowerCase().includes(q.toLowerCase()) ||
+    (p.codigo_barra||'').includes(q)
+  );
+  renderTablaProductos(filtrados);
+}
+
+function abrirModalProducto(prod = null) {
+  if (!todasCategorias.length) cargarCategorias();
+  document.getElementById('prodId').value          = prod?.id_producto || '';
+  document.getElementById('prodNombre').value       = prod?.nombre || '';
+  document.getElementById('prodPrecioCompra').value  = prod?.precio_compra || '';
+  document.getElementById('prodPrecioVenta').value   = prod?.precio_venta || '';
+  document.getElementById('prodStock').value         = prod?.stock_actual || 0;
+  document.getElementById('prodStockMin').value      = prod?.stock_minimo || 5;
+  document.getElementById('prodCodigo').value        = prod?.codigo_barra || '';
+  document.getElementById('prodCategoria').value     = prod?.id_categoria || (todasCategorias[0]?.id_categoria || '');
+  document.getElementById('prodDescripcion').value   = prod?.descripcion || '';
+  document.getElementById('modalProductoTitulo').textContent = prod ? 'Editar Producto' : 'Nuevo Producto';
+  new bootstrap.Modal(document.getElementById('modalProducto')).show();
+}
+
+async function guardarProducto() {
+  const id = document.getElementById('prodId').value;
+  const body = {
+    nombre:        document.getElementById('prodNombre').value,
+    precio_compra: parseFloat(document.getElementById('prodPrecioCompra').value),
+    precio_venta:  parseFloat(document.getElementById('prodPrecioVenta').value),
+    stock_actual:  parseInt(document.getElementById('prodStock').value),
+    stock_minimo:  parseInt(document.getElementById('prodStockMin').value),
+    codigo_barra:  document.getElementById('prodCodigo').value,
+    id_categoria:  parseInt(document.getElementById('prodCategoria').value),
+    descripcion:   document.getElementById('prodDescripcion').value,
+  };
+  if (id) await api(`/productos/${id}`, { method:'PUT', body: JSON.stringify(body) });
+  else     await api('/productos', { method:'POST', body: JSON.stringify(body) });
+  bootstrap.Modal.getInstance(document.getElementById('modalProducto')).hide();
+  cargarProductos();
+}
+
+async function eliminarProducto(id) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  await api(`/productos/${id}`, { method: 'DELETE' });
+  cargarProductos();
+}
+
+// ─── CATEGORIAS ──────────────────────────────────────────────
+async function cargarCategorias() {
+  const categorias = await api('/categorias');
+  if (categorias.error) {
+    document.getElementById('tablaCategorias').innerHTML =
+      `<tr><td colspan="4" class="text-center py-3 text-danger">${categorias.error}</td></tr>`;
+    return;
+  }
+  todasCategorias = categorias;
+  renderTablaCategorias(categorias);
+  cargarCategoriasEnSelect();
+  const btnNueva = document.getElementById('btnNuevaCategoria');
+  if (btnNueva) btnNueva.style.display = usuario.rol === 'Administrador' ? 'inline-block' : 'none';
+}
+
+function renderTablaCategorias(categorias) {
+  const tbody = document.getElementById('tablaCategorias');
+  if (!categorias.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Sin categorías</td></tr>';
+    return;
+  }
+  const esAdmin = usuario.rol === 'Administrador';
+  tbody.innerHTML = categorias.map(c => `
+    <tr>
+      <td><strong>${c.nombre_categoria}</strong></td>
+      <td>${c.total_productos || 0}</td>
+      <td><span class="badge bg-${c.estado ? 'success':'secondary'}">${c.estado ? 'Activa':'Inactiva'}</span></td>
+      <td>
+        ${esAdmin
+          ? `<button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalCategoria(${JSON.stringify(c)})'><i class="bi bi-pencil"></i></button>
+             <button class="btn btn-sm btn-outline-danger" onclick="eliminarCategoria(${c.id_categoria})"><i class="bi bi-trash"></i></button>`
+          : '<span class="text-muted small">Solo admin</span>'}
+      </td>
+    </tr>`).join('');
+}
+
+function filtrarTablaCategorias(q) {
+  const txt = (q || '').toLowerCase();
+  const filtradas = todasCategorias.filter(c => c.nombre_categoria.toLowerCase().includes(txt));
+  renderTablaCategorias(filtradas);
+}
+
+function abrirModalCategoria(cat = null) {
+  if (usuario.rol !== 'Administrador') return;
+  document.getElementById('catId').value = cat?.id_categoria || '';
+  document.getElementById('catNombre').value = cat?.nombre_categoria || '';
+  document.getElementById('modalCategoriaTitulo').textContent = cat ? 'Editar Categoría' : 'Nueva Categoría';
+  new bootstrap.Modal(document.getElementById('modalCategoria')).show();
+}
+
+async function guardarCategoria() {
+  const id = document.getElementById('catId').value;
+  const nombre = document.getElementById('catNombre').value.trim();
+  if (!nombre) {
+    alert('Ingresa el nombre de la categoría');
+    return;
+  }
+  const body = { nombre_categoria: nombre };
+  const resp = id
+    ? await api(`/categorias/${id}`, { method: 'PUT', body: JSON.stringify(body) })
+    : await api('/categorias', { method: 'POST', body: JSON.stringify(body) });
+  if (resp.error) {
+    alert(resp.error);
+    return;
+  }
+  bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
+  cargarCategorias();
+}
+
+async function eliminarCategoria(id) {
+  if (!confirm('¿Eliminar esta categoría?')) return;
+  const resp = await api(`/categorias/${id}`, { method: 'DELETE' });
+  if (resp.error) {
+    alert(resp.error);
+    return;
+  }
+  cargarCategorias();
+}
+
+function cargarCategoriasEnSelect() {
+  const select = document.getElementById('prodCategoria');
+  if (!select) return;
+  if (!todasCategorias.length) {
+    select.innerHTML = '<option value="">Sin categorías</option>';
+    return;
+  }
+  const selected = select.value;
+  select.innerHTML = todasCategorias
+    .map(c => `<option value="${c.id_categoria}">${c.nombre_categoria}</option>`)
+    .join('');
+  if (selected && todasCategorias.some(c => String(c.id_categoria) === String(selected))) {
+    select.value = selected;
+  }
+}
+
+function renderTablaSimple(filas, columnas) {
+  if (!filas || !filas.length) return '<p class="text-muted text-center small py-2">Sin datos</p>';
+  return `<div class="table-responsive"><table class="table table-sm mb-0"><tbody>${
+    filas.map(f => `<tr>${columnas.map(c => `<td>${c(f)}</td>`).join('')}</tr>`).join('')
+  }</tbody></table></div>`;
+}
+
+// ─── PROVEEDORES ──────────────────────────────────────────────
+async function cargarProveedores() {
+  const proveedores = await api('/proveedores');
+  todosProveedores = Array.isArray(proveedores) ? proveedores : [];
+  const tbody = document.getElementById('tablaProveedores');
+  if (!todosProveedores.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Sin proveedores</td></tr>';
+    return;
+  }
+  const esAdmin = usuario.rol === 'Administrador';
+  tbody.innerHTML = todosProveedores.map(p => `
+    <tr>
+      <td>${p.nombre}</td>
+      <td>${p.telefono || '-'}</td>
+      <td>${p.correo || '-'}</td>
+      <td>
+        ${esAdmin
+          ? `<button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalProveedor(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>
+             <button class="btn btn-sm btn-outline-danger" onclick="eliminarProveedor(${p.id_proveedor})"><i class="bi bi-trash"></i></button>`
+          : '<span class="text-muted small">Solo admin</span>'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function abrirModalProveedor(prov = null) {
+  if (usuario.rol !== 'Administrador') return;
+  document.getElementById('provId').value = prov?.id_proveedor || '';
+  document.getElementById('provNombre').value = prov?.nombre || '';
+  document.getElementById('provTelefono').value = prov?.telefono || '';
+  document.getElementById('provCorreo').value = prov?.correo || '';
+  document.getElementById('modalProveedorTitulo').textContent = prov ? 'Editar Proveedor' : 'Nuevo Proveedor';
+  new bootstrap.Modal(document.getElementById('modalProveedor')).show();
+}
+
+async function guardarProveedor() {
+  const id = document.getElementById('provId').value;
+  const nombre = document.getElementById('provNombre').value.trim();
+  if (!nombre) return alert('Ingresa el nombre del proveedor');
+  const body = {
+    nombre,
+    telefono: document.getElementById('provTelefono').value.trim(),
+    correo: document.getElementById('provCorreo').value.trim()
+  };
+  const r = id
+    ? await api(`/proveedores/${id}`, { method: 'PUT', body: JSON.stringify(body) })
+    : await api('/proveedores', { method: 'POST', body: JSON.stringify(body) });
+  if (r.error) return alert(r.error);
+  bootstrap.Modal.getInstance(document.getElementById('modalProveedor')).hide();
+  cargarProveedores();
+}
+
+async function eliminarProveedor(id) {
+  if (!confirm('¿Eliminar proveedor?')) return;
+  const r = await api(`/proveedores/${id}`, { method: 'DELETE' });
+  if (r.error) return alert(r.error);
+  cargarProveedores();
+}
+
+// ─── CLIENTES ─────────────────────────────────────────────────
+async function cargarClientes() {
+  const clientes = await api('/clientes');
+  todosClientes = Array.isArray(clientes) ? clientes : [];
+  const tbody = document.getElementById('tablaClientes');
+  if (!todosClientes.length) {
+    tbody.innerHTML = '<tr><td colspan="4" class="text-center py-3 text-muted">Sin clientes</td></tr>';
+    return;
+  }
+  const esAdmin = usuario.rol === 'Administrador';
+  tbody.innerHTML = todosClientes.map(c => `
+    <tr>
+      <td>${c.nombre}</td>
+      <td>${c.telefono || '-'}</td>
+      <td>${c.correo || '-'}</td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalCliente(${JSON.stringify(c)})'><i class="bi bi-pencil"></i></button>
+        ${esAdmin ? `<button class="btn btn-sm btn-outline-danger" onclick="eliminarCliente(${c.id_cliente})"><i class="bi bi-trash"></i></button>` : ''}
+      </td>
+    </tr>
+  `).join('');
+}
+
+function abrirModalCliente(cli = null) {
+  document.getElementById('cliId').value = cli?.id_cliente || '';
+  document.getElementById('cliNombre').value = cli?.nombre || '';
+  document.getElementById('cliTelefono').value = cli?.telefono || '';
+  document.getElementById('cliCorreo').value = cli?.correo || '';
+  document.getElementById('modalClienteTitulo').textContent = cli ? 'Editar Cliente' : 'Nuevo Cliente';
+  new bootstrap.Modal(document.getElementById('modalCliente')).show();
+}
+
+async function guardarCliente() {
+  const id = document.getElementById('cliId').value;
+  const nombre = document.getElementById('cliNombre').value.trim();
+  if (!nombre) return alert('Ingresa el nombre del cliente');
+  const body = {
+    nombre,
+    telefono: document.getElementById('cliTelefono').value.trim(),
+    correo: document.getElementById('cliCorreo').value.trim()
+  };
+  const r = id
+    ? await api(`/clientes/${id}`, { method: 'PUT', body: JSON.stringify(body) })
+    : await api('/clientes', { method: 'POST', body: JSON.stringify(body) });
+  if (r.error) return alert(r.error);
+  bootstrap.Modal.getInstance(document.getElementById('modalCliente')).hide();
+  cargarClientes();
+}
+
+async function eliminarCliente(id) {
+  if (!confirm('¿Eliminar cliente?')) return;
+  const r = await api(`/clientes/${id}`, { method: 'DELETE' });
+  if (r.error) return alert(r.error);
+  cargarClientes();
+}
+
+// ─── COMPRAS ──────────────────────────────────────────────────
+async function cargarCompras() {
+  const compras = await api('/compras');
+  const tbody = document.getElementById('tablaCompras');
+  if (!Array.isArray(compras) || !compras.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Sin compras registradas</td></tr>';
+    return;
+  }
+  tbody.innerHTML = compras.map(c => `
+    <tr>
+      <td>#${c.id_compra}</td>
+      <td>${new Date(c.fecha).toLocaleString()}</td>
+      <td>${c.proveedor || '-'}</td>
+      <td class="fw-bold">Q ${(c.total_compra || 0).toFixed(2)}</td>
+      <td><span class="badge bg-info text-dark">${c.estado || '-'}</span></td>
+    </tr>
+  `).join('');
+}
+
+async function abrirModalCompra() {
+  if (usuario.rol !== 'Administrador') return;
+  detalleCompra = [];
+  await Promise.all([cargarProveedores(), cargarProductos()]);
+  const selProv = document.getElementById('compraProveedor');
+  const selProd = document.getElementById('compraProducto');
+  selProv.innerHTML = todosProveedores.map(p => `<option value="${p.id_proveedor}">${p.nombre}</option>`).join('');
+  selProd.innerHTML = todosProductos.map(p => `<option value="${p.id_producto}">${p.nombre}</option>`).join('');
+  renderDetalleCompra();
+  new bootstrap.Modal(document.getElementById('modalCompra')).show();
+}
+
+function agregarDetalleCompra() {
+  const id_producto = parseInt(document.getElementById('compraProducto').value, 10);
+  const cantidad = parseInt(document.getElementById('compraCantidad').value, 10);
+  const precio_compra = parseFloat(document.getElementById('compraPrecio').value);
+  if (!id_producto || !cantidad || !precio_compra) return alert('Completa producto, cantidad y precio');
+  const existe = detalleCompra.find(i => i.id_producto === id_producto && Number(i.precio_compra) === Number(precio_compra));
+  if (existe) existe.cantidad += cantidad;
+  else detalleCompra.push({ id_producto, cantidad, precio_compra });
+  renderDetalleCompra();
+}
+
+function quitarDetalleCompra(index) {
+  detalleCompra.splice(index, 1);
+  renderDetalleCompra();
+}
+
+function renderDetalleCompra() {
+  const tbody = document.getElementById('tablaDetalleCompra');
+  if (!detalleCompra.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Sin detalles</td></tr>';
+    document.getElementById('totalCompraPreview').textContent = '0.00';
+    return;
+  }
+  let total = 0;
+  tbody.innerHTML = detalleCompra.map((d, i) => {
+    const prod = todosProductos.find(p => p.id_producto === d.id_producto);
+    const subtotal = d.cantidad * d.precio_compra;
+    total += subtotal;
+    return `<tr>
+      <td>${prod?.nombre || d.id_producto}</td>
+      <td>${d.cantidad}</td>
+      <td>Q ${Number(d.precio_compra).toFixed(2)}</td>
+      <td>Q ${subtotal.toFixed(2)}</td>
+      <td><button class="btn btn-sm btn-outline-danger" onclick="quitarDetalleCompra(${i})"><i class="bi bi-x"></i></button></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('totalCompraPreview').textContent = total.toFixed(2);
+}
+
+async function guardarCompra() {
+  const id_proveedor = parseInt(document.getElementById('compraProveedor').value, 10);
+  if (!id_proveedor || !detalleCompra.length) return alert('Selecciona proveedor y agrega detalles');
+  const r = await api('/compras', { method: 'POST', body: JSON.stringify({ id_proveedor, detalle: detalleCompra }) });
+  if (r.error) return alert(r.error);
+  bootstrap.Modal.getInstance(document.getElementById('modalCompra')).hide();
+  cargarCompras();
+}
+
+// ─── REPORTES ────────────────────────────────────────────────
+async function cargarReportes() {
+  if (usuario.rol !== 'Administrador') {
+    document.getElementById('reporteVentasDiarias').innerHTML = 'Solo disponible para administradores';
+    document.getElementById('reporteProductosVendidos').innerHTML = 'Solo disponible para administradores';
+    document.getElementById('reporteStockBajo').innerHTML = 'Solo disponible para administradores';
+    document.getElementById('reporteComprasProveedor').innerHTML = 'Solo disponible para administradores';
+    return;
+  }
+  const [ventas, productos, stock, compras] = await Promise.all([
+    api('/reportes/ventas-diarias'),
+    api('/reportes/productos-mas-vendidos'),
+    api('/reportes/stock-bajo'),
+    api('/reportes/compras-proveedor')
+  ]);
+  document.getElementById('reporteVentasDiarias').innerHTML = renderTablaSimple(ventas, [
+    r => `<strong>${new Date(r.dia).toLocaleDateString()}</strong>`,
+    r => `${r.total_ventas} ventas`,
+    r => `Q ${(r.monto_total || 0).toFixed(2)}`
+  ]);
+  document.getElementById('reporteProductosVendidos').innerHTML = renderTablaSimple(productos, [
+    r => `<strong>${r.nombre}</strong>`,
+    r => `${r.unidades_vendidas} uds`,
+    r => `Q ${(r.ingresos_totales || 0).toFixed(2)}`
+  ]);
+  document.getElementById('reporteStockBajo').innerHTML = renderTablaSimple(stock, [
+    r => `<strong>${r.nombre}</strong>`,
+    r => `${r.stock_actual}/${r.stock_minimo}`,
+    r => `${r.nombre_categoria}`
+  ]);
+  document.getElementById('reporteComprasProveedor').innerHTML = renderTablaSimple(compras, [
+    r => `<strong>${r.proveedor}</strong>`,
+    r => `${r.total_compras} compras`,
+    r => `Q ${(r.monto_total || 0).toFixed(2)}`
+  ]);
+}
+
+// ─── USUARIOS ────────────────────────────────────────────────
+async function cargarUsuarios() {
+  if (usuario.rol !== 'Administrador') return;
+  const usuarios = await api('/auth/usuarios');
+  todosUsuarios = Array.isArray(usuarios) ? usuarios : [];
+  const tbody = document.getElementById('tablaUsuarios');
+  if (!todosUsuarios.length) {
+    tbody.innerHTML = '<tr><td colspan="5" class="text-center py-3 text-muted">Sin usuarios</td></tr>';
+    return;
+  }
+  tbody.innerHTML = todosUsuarios.map(u => `
+    <tr>
+      <td>${u.nombre}</td>
+      <td>${u.correo}</td>
+      <td><span class="badge bg-${u.rol === 'Administrador' ? 'primary' : 'secondary'}">${u.rol}</span></td>
+      <td><span class="badge bg-${u.estado ? 'success' : 'danger'}">${u.estado ? 'Activo' : 'Inactivo'}</span></td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalUsuario(${JSON.stringify(u)})'><i class="bi bi-pencil"></i></button>
+        <button class="btn btn-sm btn-outline-warning" onclick="toggleUsuario(${u.id_usuario}, ${u.estado ? 'false' : 'true'})">
+          <i class="bi bi-power"></i>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function abrirModalUsuario(usr = null) {
+  if (usuario.rol !== 'Administrador') return;
+  document.getElementById('usrId').value = usr?.id_usuario || '';
+  document.getElementById('usrNombre').value = usr?.nombre || '';
+  document.getElementById('usrCorreo').value = usr?.correo || '';
+  document.getElementById('usrRol').value = usr?.rol || 'Cajero';
+  document.getElementById('usrPassword').value = '';
+  document.getElementById('usrPasswordWrap').style.display = usr ? 'none' : 'block';
+  document.getElementById('modalUsuarioTitulo').textContent = usr ? 'Editar Usuario' : 'Nuevo Usuario';
+  new bootstrap.Modal(document.getElementById('modalUsuario')).show();
+}
+
+async function guardarUsuario() {
+  const id = document.getElementById('usrId').value;
+  const payload = {
+    nombre: document.getElementById('usrNombre').value.trim(),
+    correo: document.getElementById('usrCorreo').value.trim(),
+    rol: document.getElementById('usrRol').value
+  };
+  if (!payload.nombre || !payload.correo) return alert('Nombre y correo son requeridos');
+  let r;
+  if (id) {
+    r = await api(`/auth/usuarios/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
+  } else {
+    const password = document.getElementById('usrPassword').value;
+    if (!password) return alert('Ingresa una contraseña');
+    r = await api('/auth/registro', { method: 'POST', body: JSON.stringify({ ...payload, password }) });
+  }
+  if (r.error) return alert(r.error);
+  bootstrap.Modal.getInstance(document.getElementById('modalUsuario')).hide();
+  cargarUsuarios();
+}
+
+async function toggleUsuario(id, estado) {
+  const r = await api(`/auth/usuarios/${id}/estado`, {
+    method: 'PUT',
+    body: JSON.stringify({ estado })
+  });
+  if (r.error) return alert(r.error);
+  cargarUsuarios();
+}
+
+// ─── POS ─────────────────────────────────────────────────────
+async function iniciarPOS() {
+  carritoItems = [];
+  ventaActualId = null;
+  renderCarrito();
+  document.getElementById('posResultados').innerHTML = '';
+  // Crear venta en backend
+  const venta = await api('/ventas/nueva', { method:'POST', body: JSON.stringify({}) });
+  ventaActualId = venta.id_venta;
+}
+
+async function buscarProductoPOS(q) {
+  if (!q || q.length < 2) { document.getElementById('posResultados').innerHTML = ''; return; }
+  const productos = await api(`/productos/buscar?q=${encodeURIComponent(q)}`);
+  const cont = document.getElementById('posResultados');
+  if (!productos.length) { cont.innerHTML = '<div class="col-12 text-muted small">Sin resultados</div>'; return; }
+  cont.innerHTML = productos.slice(0, 6).map(p => `
+    <div class="col-6 col-md-4">
+      <div class="pos-product-card ${p.stock_actual <= 0 ? 'stock-low' : ''}" onclick="agregarAlCarrito(${p.id_producto}, '${p.nombre.replace(/'/g,"\\'")}', ${p.precio_venta}, ${p.stock_actual})">
+        <div class="fw-semibold small">${p.nombre}</div>
+        <div class="d-flex justify-content-between mt-1">
+          <span class="text-primary fw-bold">Q ${(p.precio_venta||0).toFixed(2)}</span>
+          <span class="badge ${p.stock_actual <= 0 ? 'bg-danger' : p.stock_actual <= p.stock_minimo ? 'bg-warning text-dark' : 'bg-success'}">
+            Stock: ${p.stock_actual}
+          </span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function agregarAlCarrito(id, nombre, precio, stock) {
+  if (stock <= 0) { alert('Producto sin stock disponible'); return; }
+  const existente = carritoItems.find(i => i.id === id);
+  if (existente) {
+    if (existente.cantidad >= stock) { alert(`Stock máximo disponible: ${stock}`); return; }
+    existente.cantidad++;
+  } else {
+    carritoItems.push({ id, nombre, precio, cantidad: 1, stock });
+  }
+  renderCarrito();
+}
+
+function cambiarCantidad(id, delta) {
+  const item = carritoItems.find(i => i.id === id);
+  if (!item) return;
+  item.cantidad += delta;
+  if (item.cantidad <= 0) carritoItems = carritoItems.filter(i => i.id !== id);
+  if (item.cantidad > item.stock) { alert(`Stock máximo: ${item.stock}`); item.cantidad = item.stock; }
+  renderCarrito();
+}
+
+function renderCarrito() {
+  const cont  = document.getElementById('posCarrito');
+  const total = carritoItems.reduce((s, i) => s + i.precio * i.cantidad, 0);
+  document.getElementById('posTotal').textContent = total.toFixed(2);
+  if (!carritoItems.length) {
+    cont.innerHTML = '<p class="text-muted text-center small py-3">Agrega productos desde la búsqueda</p>';
+    return;
+  }
+  cont.innerHTML = carritoItems.map(item => `
+    <div class="cart-item">
+      <div class="flex-grow-1">
+        <div class="small fw-semibold">${item.nombre}</div>
+        <div class="small text-muted">Q ${item.precio.toFixed(2)} c/u</div>
+      </div>
+      <div class="d-flex align-items-center gap-1">
+        <button class="btn btn-sm btn-outline-secondary px-2 py-0" onclick="cambiarCantidad(${item.id}, -1)">-</button>
+        <span class="fw-bold px-1">${item.cantidad}</span>
+        <button class="btn btn-sm btn-outline-secondary px-2 py-0" onclick="cambiarCantidad(${item.id}, 1)">+</button>
+      </div>
+      <div class="fw-bold text-primary ms-2">Q ${(item.precio * item.cantidad).toFixed(2)}</div>
+    </div>`).join('');
+}
+
+function limpiarCarrito() {
+  if (!confirm('¿Limpiar el carrito?')) return;
+  carritoItems = [];
+  renderCarrito();
+}
+
+async function finalizarVenta() {
+  if (!carritoItems.length) { alert('Agrega productos al carrito'); return; }
+  const metodo = document.getElementById('posMetodoPago').value;
+  if (!metodo) { alert('Selecciona el método de pago'); return; }
+  if (!ventaActualId) { alert('Error: no hay venta activa'); return; }
+
+  // Agregar cada item al detalle en el backend
+  for (const item of carritoItems) {
+    const r = await api('/ventas/agregar-producto', {
+      method: 'POST',
+      body: JSON.stringify({ id_venta: ventaActualId, id_producto: item.id, cantidad: item.cantidad })
+    });
+    if (r.error) { alert('Error: ' + r.error); return; }
+  }
+
+  // Finalizar venta
+  const r = await api('/ventas/finalizar', {
+    method: 'POST',
+    body: JSON.stringify({ id_venta: ventaActualId, metodo_pago: metodo })
+  });
+  if (r.error) { alert('Error: ' + r.error); return; }
+
+  const total = carritoItems.reduce((s, i) => s + i.precio * i.cantidad, 0);
+  alert(`✅ Venta #${ventaActualId} completada\nTotal: Q ${total.toFixed(2)}\nMétodo: ${metodo}`);
+  iniciarPOS();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+window.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') hacerLogin();
+});
+
+// Verificar sesión guardada
+const savedToken = localStorage.getItem('sm_token');
+const savedUser  = localStorage.getItem('sm_usuario');
+if (savedToken && savedUser) {
+  token   = savedToken;
+  usuario = JSON.parse(savedUser);
+  iniciarApp();
+}
+</script>
+</body>
+</html>
