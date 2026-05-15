@@ -94,4 +94,21 @@ const anular = async (id_venta) => {
     .query("UPDATE Ventas SET estado = 'Anulada' WHERE id_venta = @id");
 };
 
-module.exports = { crear, agregarDetalle, finalizar, getById, getByPeriodo, anular };
+const getVentasPorDia = async (dias = 7) => {
+  const pool = await poolPromise;
+  const result = await pool.request()
+    .input('dias', sql.Int, dias)
+    .query(`
+      SELECT 
+        CAST(fecha AS DATE) AS fecha,
+        COUNT(*) AS total_ventas,
+        ISNULL(SUM(total_venta), 0) AS total_ingresos
+      FROM Ventas
+      WHERE estado = 'Completada'
+        AND fecha >= DATEADD(DAY, -@dias, GETDATE())
+      GROUP BY CAST(fecha AS DATE)
+      ORDER BY CAST(fecha AS DATE) ASC
+    `);
+  return result.recordset;
+};
+module.exports = { crear, agregarDetalle, finalizar, getById, getByPeriodo, anular, getVentasPorDia };

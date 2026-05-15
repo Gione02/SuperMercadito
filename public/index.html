@@ -7,52 +7,177 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <style>
-    :root { --sidebar-w: 240px; }
-    body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; }
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap');
+
+    :root {
+      --sidebar-w: 240px;
+      --blue: #2563eb;
+      --blue-light: #eff6ff;
+      --green: #16a34a;
+      --green-light: #f0fdf4;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --red: #dc2626;
+      --red-light: #fef2f2;
+      --purple: #7c3aed;
+      --purple-light: #f5f3ff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-400: #94a3b8;
+      --gray-600: #475569;
+      --gray-900: #0f172a;
+      --radius: 14px;
+      --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+      --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--gray-50); color: var(--gray-900); margin:0; }
 
     /* LOGIN */
-    #loginPage { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,#1a6fc4,#0d3e6e); }
-    .login-card { background:#fff; border-radius:16px; padding:2.5rem; width:100%; max-width:400px; box-shadow:0 8px 32px rgba(0,0,0,.25); }
+    #loginPage { display:flex; align-items:center; justify-content:center; min-height:100vh; background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #0891b2 100%); }
+    .login-card { background:#fff; border-radius:20px; padding:2.5rem; width:100%; max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,.2); }
     .login-logo { font-size:3rem; text-align:center; margin-bottom:.5rem; }
 
     /* APP LAYOUT */
     #appPage { display:none; }
-    .sidebar { position:fixed; top:0; left:0; height:100vh; width:var(--sidebar-w); background:#0d3e6e; color:#fff; overflow-y:auto; z-index:100; transition:.3s; }
-    .sidebar .brand { padding:1.5rem 1.2rem 1rem; border-bottom:1px solid rgba(255,255,255,.15); font-size:1.1rem; font-weight:700; }
-    .sidebar .nav-link { color:rgba(255,255,255,.8); padding:.65rem 1.2rem; border-radius:8px; margin:.2rem .6rem; display:flex; align-items:center; gap:.6rem; transition:.2s; }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active { background:rgba(255,255,255,.15); color:#fff; }
-    .sidebar .nav-section { font-size:.7rem; text-transform:uppercase; color:rgba(255,255,255,.4); padding:.8rem 1.2rem .2rem; letter-spacing:.08em; }
+    .sidebar { position:fixed; top:0; left:0; height:100vh; width:var(--sidebar-w); background:#0f172a; color:#fff; overflow-y:auto; z-index:100; transition:.3s; }
+    .sidebar .brand { padding:1.4rem 1.2rem 1rem; border-bottom:1px solid rgba(255,255,255,.08); font-size:1rem; font-weight:700; letter-spacing:-.01em; display:flex; align-items:center; gap:.5rem; }
+    .sidebar .nav-link { color:rgba(255,255,255,.6); padding:.6rem 1rem; border-radius:10px; margin:.15rem .7rem; display:flex; align-items:center; gap:.65rem; transition:.18s; font-size:.875rem; font-weight:500; cursor:pointer; text-decoration:none; }
+    .sidebar .nav-link:hover { background:rgba(255,255,255,.08); color:#fff; }
+    .sidebar .nav-link.active { background:rgba(37,99,235,.3); color:#93c5fd; }
+    .sidebar .nav-section { font-size:.68rem; text-transform:uppercase; color:rgba(255,255,255,.3); padding:.9rem 1.2rem .25rem; letter-spacing:.1em; font-weight:600; }
 
-    .topbar { position:fixed; top:0; left:var(--sidebar-w); right:0; height:60px; background:#fff; border-bottom:1px solid #e5e7eb; display:flex; align-items:center; padding:0 1.5rem; z-index:99; gap:1rem; }
-    .topbar .page-title { font-weight:600; font-size:1.1rem; flex:1; }
+    .topbar { position:fixed; top:0; left:var(--sidebar-w); right:0; height:60px; background:#fff; border-bottom:1px solid var(--gray-200); display:flex; align-items:center; padding:0 1.5rem; z-index:99; gap:1rem; }
+    .topbar .page-title { font-weight:700; font-size:1rem; flex:1; color: var(--gray-900); letter-spacing:-.01em; }
 
-    .main-content { margin-left:var(--sidebar-w); margin-top:60px; padding:1.5rem; min-height:calc(100vh - 60px); }
+    .main-content { margin-left:var(--sidebar-w); margin-top:60px; padding:1.75rem; min-height:calc(100vh - 60px); }
 
-    /* CARDS */
-    .stat-card { background:#fff; border-radius:12px; padding:1.4rem; border:1px solid #e5e7eb; }
-    .stat-card .icon-wrap { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; }
-    .stat-card .value { font-size:1.8rem; font-weight:700; line-height:1; }
-    .stat-card .label { color:#6b7280; font-size:.85rem; margin-top:.25rem; }
+    /* BASE CARD */
+    .stat-card { background:#fff; border-radius:var(--radius); padding:1.4rem; border:1px solid var(--gray-200); box-shadow: var(--shadow); }
+
+    /* DASHBOARD METRIC CARDS */
+    .metric-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 1.4rem 1.5rem;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      cursor: pointer;
+      transition: box-shadow .2s, transform .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .metric-card .mc-top { display:flex; justify-content:space-between; align-items:flex-start; }
+    .metric-card .mc-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+    .metric-card .mc-arrow { color: var(--gray-400); font-size:.9rem; transition:.2s; }
+    .metric-card:hover .mc-arrow { color: var(--blue); transform:translateX(3px); }
+    .metric-card .mc-value { font-size:2rem; font-weight:700; line-height:1; font-family:'DM Mono', monospace; letter-spacing:-.03em; }
+    .metric-card .mc-label { font-size:.8rem; color: var(--gray-600); font-weight:500; }
+    .metric-card .mc-trend { font-size:.75rem; font-weight:600; display:flex; align-items:center; gap:.25rem; }
+    .mc-trend.up { color: var(--green); }
+    .mc-trend.neutral { color: var(--gray-400); }
+    .mc-trend.down { color: var(--red); }
+    .metric-card .mc-accent { position:absolute; bottom:0; left:0; right:0; height:3px; border-radius:0 0 var(--radius) var(--radius); }
+
+    /* CHART CARD */
+    .chart-card { background:#fff; border-radius:var(--radius); padding:1.5rem; border:1px solid var(--gray-200); box-shadow:var(--shadow); }
+    .chart-card .cc-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.25rem; }
+    .chart-card .cc-title { font-weight:700; font-size:.95rem; color:var(--gray-900); }
+    .chart-card .cc-sub { font-size:.78rem; color:var(--gray-400); margin-top:.15rem; }
+    .chart-card .cc-badge { background:var(--green-light); color:var(--green); font-size:.75rem; font-weight:600; padding:.25rem .65rem; border-radius:20px; }
+
+    /* PERIOD BUTTONS */
+    .period-btns { display:flex; gap:.4rem; }
+    .period-btns button { border:1px solid var(--gray-200); background:#fff; color:var(--gray-600); font-size:.75rem; font-weight:600; padding:.3rem .75rem; border-radius:8px; cursor:pointer; transition:.15s; font-family:'DM Sans',sans-serif; }
+    .period-btns button:hover { border-color:var(--blue); color:var(--blue); }
+    .period-btns button.active { background:var(--blue); border-color:var(--blue); color:#fff; }
 
     /* POS */
-    .pos-product-card { cursor:pointer; border:2px solid transparent; border-radius:10px; padding:.8rem; transition:.2s; }
-    .pos-product-card:hover { border-color:#1a6fc4; background:#f0f7ff; }
+    .pos-product-card { cursor:pointer; border:2px solid transparent; border-radius:10px; padding:.8rem; transition:.2s; background:#fff; border:1px solid var(--gray-200); }
+    .pos-product-card:hover { border-color:var(--blue); background:var(--blue-light); }
     .pos-product-card.stock-low { opacity:.6; }
-    .cart-item { display:flex; align-items:center; gap:.5rem; padding:.5rem 0; border-bottom:1px solid #f0f0f0; }
+    .cart-item { display:flex; align-items:center; gap:.5rem; padding:.5rem 0; border-bottom:1px solid var(--gray-100); }
 
     .badge-rol-admin { background:#dbeafe; color:#1d4ed8; }
     .badge-rol-cajero { background:#dcfce7; color:#16a34a; }
 
     /* ALERT STOCK */
-    .stock-alert-bar { background:#fef3c7; border-left:4px solid #f59e0b; padding:.6rem 1rem; border-radius:6px; font-size:.875rem; }
+    .stock-alert-bar { background:#fffbeb; border-left:4px solid #f59e0b; padding:.6rem 1rem; border-radius:8px; font-size:.875rem; }
 
     /* TABLES */
-    .table th { background:#f8fafc; font-weight:600; font-size:.85rem; text-transform:uppercase; letter-spacing:.03em; }
-    .table td { vertical-align:middle; }
+    .table th { background:var(--gray-50); font-weight:600; font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-600); }
+    .table td { vertical-align:middle; font-size:.875rem; }
 
     /* VIEWS */
     .view { display:none; }
     .view.active { display:block; }
+
+    /* DASHBOARD HEADER */
+    .dash-header { margin-bottom:1.5rem; }
+    .dash-header h2 { font-size:1.5rem; font-weight:700; margin:0; letter-spacing:-.02em; }
+    .dash-header p { color:var(--gray-400); font-size:.875rem; margin:.2rem 0 0; }
+
+    /* STOCK BADGES */
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 48px;
+      padding: .25rem .65rem;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 700;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: -.02em;
+      position: relative;
+      transition: transform .2s;
+    }
+    .stock-badge:hover { transform: scale(1.08); }
+    .stock-badge.ok {
+      background: #f0fdf4;
+      color: #16a34a;
+      border: 1.5px solid #bbf7d0;
+    }
+    .stock-badge.warning {
+      background: #fffbeb;
+      color: #b45309;
+      border: 1.5px solid #fde68a;
+      animation: pulse-warning 2s infinite;
+    }
+    .stock-badge.critical {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1.5px solid #fecaca;
+      animation: pulse-critical 1.2s infinite;
+    }
+    .stock-badge .stock-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      margin-right: 5px;
+      flex-shrink: 0;
+    }
+    .stock-badge.ok .stock-dot { background: #16a34a; }
+    .stock-badge.warning .stock-dot { background: #d97706; animation: blink 1.5s infinite; }
+    .stock-badge.critical .stock-dot { background: #dc2626; animation: blink .8s infinite; }
+
+    @keyframes pulse-warning {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(217,119,6,.0); }
+      50% { box-shadow: 0 0 0 4px rgba(217,119,6,.15); }
+    }
+    @keyframes pulse-critical {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220,38,38,.0); }
+      50% { box-shadow: 0 0 0 5px rgba(220,38,38,.2); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .2; }
+    }
 
     @media (max-width: 768px) {
       :root { --sidebar-w: 0px; }
@@ -130,73 +255,123 @@
   <div class="main-content">
 
     <!-- DASHBOARD -->
+    <!-- DASHBOARD -->
     <div id="view-dashboard" class="view active">
-      <div id="stockAlertBar" class="stock-alert-bar mb-3 d-none">
+
+      <div id="stockAlertBar" class="stock-alert-bar mb-4 d-none">
         <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
         <strong id="alertCount">0</strong> productos con stock bajo o agotado.
         <a href="#" onclick="mostrarVista('productos')" class="ms-1">Ver productos</a>
       </div>
+
+      <div class="dash-header">
+        <h2>Dashboard</h2>
+        <p>Resumen general de Súper Mercadito</p>
+      </div>
+
       <div class="row g-3 mb-4">
-        <div class="col-md-3">
-          <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-              <div class="icon-wrap bg-primary bg-opacity-10 text-primary"><i class="bi bi-receipt"></i></div>
-              <div>
-                <div class="value" id="statVentasHoy">-</div>
-                <div class="label">Ventas hoy</div>
-              </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card" onclick="mostrarVista('pos')">
+            <div class="mc-top">
+              <div class="mc-icon" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-receipt"></i></div>
+              <i class="bi bi-arrow-right mc-arrow"></i>
             </div>
+            <div class="mc-value" id="statVentasHoy">—</div>
+            <div class="mc-label">Ventas hoy</div>
+            <div class="mc-trend neutral" id="trendVentas"><i class="bi bi-dash"></i> sin datos previos</div>
+            <div class="mc-accent" style="background:#2563eb;"></div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-              <div class="icon-wrap bg-success bg-opacity-10 text-success"><i class="bi bi-currency-dollar"></i></div>
-              <div>
-                <div class="value" id="statIngresosHoy">-</div>
-                <div class="label">Ingresos hoy</div>
-              </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card" onclick="mostrarVista('reportes')">
+            <div class="mc-top">
+              <div class="mc-icon" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-currency-dollar"></i></div>
+              <i class="bi bi-arrow-right mc-arrow"></i>
             </div>
+            <div class="mc-value" id="statIngresosHoy">—</div>
+            <div class="mc-label">Ingresos hoy</div>
+            <div class="mc-trend neutral" id="trendIngresos"><i class="bi bi-dash"></i> sin datos previos</div>
+            <div class="mc-accent" style="background:#16a34a;"></div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-              <div class="icon-wrap bg-info bg-opacity-10 text-info"><i class="bi bi-box-seam"></i></div>
-              <div>
-                <div class="value" id="statProductos">-</div>
-                <div class="label">Productos activos</div>
-              </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card" onclick="mostrarVista('productos')">
+            <div class="mc-top">
+              <div class="mc-icon" style="background:#f5f3ff;color:#7c3aed;"><i class="bi bi-box-seam"></i></div>
+              <i class="bi bi-arrow-right mc-arrow"></i>
             </div>
+            <div class="mc-value" id="statProductos">—</div>
+            <div class="mc-label">Productos activos</div>
+            <div class="mc-trend neutral"><i class="bi bi-box-seam"></i> en inventario</div>
+            <div class="mc-accent" style="background:#7c3aed;"></div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="stat-card">
-            <div class="d-flex align-items-center gap-3">
-              <div class="icon-wrap bg-warning bg-opacity-10 text-warning"><i class="bi bi-exclamation-diamond"></i></div>
-              <div>
-                <div class="value text-warning" id="statStockBajo">-</div>
-                <div class="label">Stock bajo</div>
-              </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card" onclick="mostrarVista('productos')">
+            <div class="mc-top">
+              <div class="mc-icon" style="background:#fffbeb;color:#d97706;"><i class="bi bi-exclamation-diamond"></i></div>
+              <i class="bi bi-arrow-right mc-arrow"></i>
             </div>
+            <div class="mc-value" id="statStockBajo" style="color:#d97706;">—</div>
+            <div class="mc-label">Stock bajo</div>
+            <div class="mc-trend down"><i class="bi bi-exclamation-circle"></i> requieren atención</div>
+            <div class="mc-accent" style="background:#d97706;"></div>
           </div>
         </div>
       </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-lg-8">
+          <div class="chart-card">
+            <div class="cc-header">
+              <div>
+                <div class="cc-title">Ventas de la semana</div>
+                <div class="cc-sub" id="grafSubtitle">Últimos 7 días</div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="cc-badge" id="grafBadge" style="display:none"></span>
+                <div class="period-btns" id="btnGrupoPeriodo">
+                  <button class="active" data-dias="7">7d</button>
+                  <button data-dias="14">14d</button>
+                  <button data-dias="30">30d</button>
+                </div>
+              </div>
+            </div>
+            <canvas id="graficaVentas" height="110"></canvas>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="chart-card" style="height:100%;">
+            <div class="cc-header">
+              <div>
+                <div class="cc-title">Estado de ventas</div>
+                <div class="cc-sub">Distribución actual</div>
+              </div>
+            </div>
+            <div style="position:relative;max-width:180px;margin:0 auto;">
+              <canvas id="graficaDona" height="180"></canvas>
+            </div>
+            <div id="legendDona" class="mt-3" style="font-size:.8rem;"></div>
+          </div>
+        </div>
+      </div>
+
       <div class="row g-3">
         <div class="col-md-6">
           <div class="stat-card">
-            <h6 class="fw-bold mb-3"><i class="bi bi-exclamation-triangle text-warning me-2"></i>Productos con stock bajo</h6>
-            <div id="tablaStockBajo"><div class="text-muted text-center py-3">Cargando...</div></div>
+            <h6 class="fw-bold mb-3" style="font-size:.875rem;"><i class="bi bi-exclamation-triangle text-warning me-2"></i>Productos con stock bajo</h6>
+            <div id="tablaStockBajo"><div class="text-muted text-center py-3" style="font-size:.85rem;">Cargando...</div></div>
           </div>
         </div>
         <div class="col-md-6">
           <div class="stat-card">
-            <h6 class="fw-bold mb-3"><i class="bi bi-clock-history text-primary me-2"></i>Últimas ventas</h6>
-            <div id="tablaUltimasVentas"><div class="text-muted text-center py-3">Cargando...</div></div>
+            <h6 class="fw-bold mb-3" style="font-size:.875rem;"><i class="bi bi-clock-history me-2" style="color:#2563eb;"></i>Últimas ventas</h6>
+            <div id="tablaUltimasVentas"><div class="text-muted text-center py-3" style="font-size:.85rem;">Cargando...</div></div>
           </div>
         </div>
       </div>
-    </div>
+
+    </div><!-- /view-dashboard -->
 
     <!-- POS -->
     <div id="view-pos" class="view">
@@ -275,6 +450,7 @@
         </div>
       </div>
     </div>
+
     <div id="view-compras" class="view">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h6 class="fw-bold mb-0">Registro de compras</h6>
@@ -514,6 +690,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const API = '/api';
 let token = null, usuario = null;
@@ -524,8 +701,9 @@ let todosProveedores = [];
 let todosClientes = [];
 let todosUsuarios = [];
 let detalleCompra = [];
+let graficaVentas = null;
 
-// ─── AUTH ────────────────────────────────────────────────────
+// AUTH
 async function hacerLogin() {
   const correo   = document.getElementById('loginCorreo').value.trim();
   const password = document.getElementById('loginPassword').value;
@@ -573,7 +751,7 @@ function iniciarApp() {
   cargarDashboard();
 }
 
-// ─── API HELPER ──────────────────────────────────────────────
+// API HELPER
 async function api(path, opts = {}) {
   const r = await fetch(`${API}${path}`, {
     ...opts,
@@ -582,7 +760,7 @@ async function api(path, opts = {}) {
   return r.json();
 }
 
-// ─── NAVEGACIÓN ──────────────────────────────────────────────
+// NAVEGACIÓN
 function mostrarVista(nombre) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
@@ -591,17 +769,18 @@ function mostrarVista(nombre) {
     categorias:'Categorías', compras:'Compras', proveedores:'Proveedores',
     clientes:'Clientes', reportes:'Reportes', usuarios:'Usuarios' };
   document.getElementById('pageTitle').textContent = titles[nombre] || nombre;
-  if (nombre === 'productos') cargarProductos();
-  if (nombre === 'categorias') cargarCategorias();
-  if (nombre === 'pos') iniciarPOS();
-  if (nombre === 'compras') cargarCompras();
+  if (nombre === 'productos')   cargarProductos();
+  if (nombre === 'categorias')  cargarCategorias();
+  if (nombre === 'pos')         iniciarPOS();
+  if (nombre === 'compras')     cargarCompras();
   if (nombre === 'proveedores') cargarProveedores();
-  if (nombre === 'clientes') cargarClientes();
-  if (nombre === 'reportes') cargarReportes();
-  if (nombre === 'usuarios') cargarUsuarios();
+  if (nombre === 'clientes')    cargarClientes();
+  if (nombre === 'reportes')    cargarReportes();
+  if (nombre === 'usuarios')    cargarUsuarios();
+  if (nombre === 'dashboard')   { cargarDashboard(); }
 }
 
-// ─── DASHBOARD ───────────────────────────────────────────────
+// DASHBOARD
 async function cargarDashboard() {
   const productos = await api('/productos');
   todosProductos  = productos;
@@ -642,9 +821,189 @@ async function cargarDashboard() {
     document.getElementById('statIngresosHoy').textContent = '-';
     document.getElementById('tablaUltimasVentas').innerHTML = '<p class="text-muted text-center small py-2">Solo disponible para administradores</p>';
   }
+
+  // Cargar gráficas al iniciar dashboard (delay para que el canvas tenga dimensiones)
+  setTimeout(() => { cargarGraficaVentas(7); cargarGraficaDona(); }, 80);
 }
 
-// ─── PRODUCTOS ───────────────────────────────────────────────
+// GRÁFICAS DASHBOARD
+let graficaDona = null;
+
+async function cargarGraficaVentas(dias = 7) {
+  if (!usuario || usuario.rol !== 'Administrador') return;
+  try {
+    const datos = await api(`/ventas/estadisticas/por-dia?dias=${dias}`);
+    if (!Array.isArray(datos)) return;
+
+    // Construir mapa de datos reales por fecha
+    const dataMap = {};
+    datos.forEach(d => {
+      const dateStr = typeof d.fecha === 'string' ? d.fecha.split('T')[0] : new Date(d.fecha).toISOString().split('T')[0];
+      dataMap[dateStr] = { ventas: d.total_ventas, ingresos: parseFloat(d.total_ingresos) };
+    });
+
+    // Generar todos los días del período (con 0 si no hay ventas)
+    const labels = [], ventas = [], ingresos = [];
+    for (let i = dias - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split('T')[0];
+      labels.push(d.toLocaleDateString('es-GT', { day: '2-digit', month: 'short' }));
+      ventas.push(dataMap[key]?.ventas || 0);
+      ingresos.push(dataMap[key]?.ingresos || 0);
+    }
+
+    // Badge de tendencia
+    const totalVentas = ventas.reduce((a,b)=>a+b,0);
+    const badge = document.getElementById('grafBadge');
+    if (badge) {
+      badge.textContent = totalVentas > 0 ? `+${totalVentas} ventas` : 'Sin ventas';
+      badge.style.display = '';
+      badge.style.background = totalVentas > 0 ? '#f0fdf4' : '#f8fafc';
+      badge.style.color = totalVentas > 0 ? '#16a34a' : '#94a3b8';
+    }
+    const sub = document.getElementById('grafSubtitle');
+    if (sub) sub.textContent = `Últimos ${dias} días`;
+
+    const ctx = document.getElementById('graficaVentas').getContext('2d');
+    if (graficaVentas) graficaVentas.destroy();
+
+    graficaVentas = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Ingresos (Q)',
+            data: ingresos,
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37,99,235,0.08)',
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointBackgroundColor: '#2563eb',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            fill: true,
+            tension: 0.45,
+            yAxisID: 'y',
+          },
+          {
+            label: 'Ventas',
+            data: ventas,
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22,163,74,0.07)',
+            borderWidth: 2,
+            pointRadius: 3,
+            pointBackgroundColor: '#16a34a',
+            pointBorderColor: '#fff',
+            pointBorderWidth: 2,
+            fill: false,
+            tension: 0.45,
+            yAxisID: 'y2',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 900, easing: 'easeInOutQuart' },
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { font: { family: 'DM Sans', size: 12 }, boxWidth: 12, padding: 16 }
+          },
+          tooltip: {
+            backgroundColor: '#fff',
+            titleColor: '#0f172a',
+            bodyColor: '#475569',
+            borderColor: '#e2e8f0',
+            borderWidth: 1,
+            padding: 12,
+            callbacks: {
+              label: c => c.dataset.label === 'Ingresos (Q)' ? ` Q ${c.parsed.y.toFixed(2)}` : ` ${c.parsed.y} ventas`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: '#f1f5f9' },
+            ticks: { font: { family: 'DM Sans', size: 11 }, color: '#94a3b8' }
+          },
+          y: {
+            position: 'left',
+            beginAtZero: true,
+            suggestedMax: Math.max(...ingresos) * 1.2 || 10,
+            grid: { color: '#f1f5f9' },
+            ticks: { callback: v => `Q${v}`, font: { family: 'DM Sans', size: 11 }, color: '#94a3b8' }
+          },
+          y2: {
+            position: 'right',
+            beginAtZero: true,
+            suggestedMax: Math.max(...ventas) + 1 || 5,
+            grid: { drawOnChartArea: false },
+            ticks: { stepSize: 1, font: { family: 'DM Sans', size: 11 }, color: '#94a3b8' }
+          }
+        }
+      }
+    });
+  } catch (e) { console.error('Error gráfica línea:', e); }
+}
+
+async function cargarGraficaDona() {
+  if (!usuario || usuario.rol !== 'Administrador') return;
+  try {
+    const hoy = new Date().toISOString().split('T')[0];
+    const ventas = await api(`/ventas/reporte?inicio=${hoy}T00:00:00&fin=${hoy}T23:59:59`);
+    if (!Array.isArray(ventas)) return;
+
+    const completadas = ventas.filter(v => v.estado === 'Completada').length;
+    const anuladas    = ventas.filter(v => v.estado === 'Anulada').length;
+    const enProceso   = ventas.filter(v => v.estado === 'En proceso').length;
+
+    const ctx = document.getElementById('graficaDona').getContext('2d');
+    if (graficaDona) graficaDona.destroy();
+
+    const colores = ['#2563eb', '#16a34a', '#f59e0b'];
+    const labels  = ['Completadas', 'Anuladas', 'En proceso'];
+    const datos   = [completadas, anuladas, enProceso];
+    const total   = datos.reduce((a,b)=>a+b,0);
+
+    if (total === 0) {
+      document.getElementById('legendDona').innerHTML = '<p class="text-muted text-center small">Sin ventas hoy</p>';
+      return;
+    }
+
+    graficaDona = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels, datasets: [{ data: datos, backgroundColor: colores, borderWidth: 0, hoverOffset: 6 }] },
+      options: {
+        cutout: '68%',
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => ` ${c.label}: ${c.raw}` } } }
+      }
+    });
+
+    document.getElementById('legendDona').innerHTML = labels.map((l,i) => `
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <div class="d-flex align-items-center gap-2">
+          <div style="width:10px;height:10px;border-radius:50%;background:${colores[i]};flex-shrink:0;"></div>
+          <span style="color:#475569;">${l}</span>
+        </div>
+        <strong>${datos[i]}</strong>
+      </div>`).join('');
+  } catch (e) { console.error('Error dona:', e); }
+}
+
+// Botones de período
+const _btnGrupo = document.getElementById('btnGrupoPeriodo');
+if (_btnGrupo) _btnGrupo.addEventListener('click', e => {
+  const btn = e.target.closest('[data-dias]');
+  if (!btn) return;
+  document.querySelectorAll('#btnGrupoPeriodo button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  cargarGraficaVentas(parseInt(btn.dataset.dias));
+});
+
+// PRODUCTOS
 async function cargarProductos() {
   const productos = await api('/productos');
   todosProductos  = productos;
@@ -659,10 +1018,12 @@ function renderTablaProductos(productos) {
       <td><strong>${p.nombre}</strong><br><small class="text-muted">${p.codigo_barra||''}</small></td>
       <td>${p.nombre_categoria||'-'}</td>
       <td>Q ${(p.precio_venta||0).toFixed(2)}</td>
-      <td>${p.stock_actual <= p.stock_minimo
-        ? `<span class="badge bg-danger">${p.stock_actual}</span>`
-        : `<span class="badge bg-success">${p.stock_actual}</span>`
-      }</td>
+      <td>${(function(){
+        var s = p.stock_actual, m = p.stock_minimo;
+        var cls = s <= 0 ? 'critical' : s <= m ? 'warning' : 'ok';
+        var label = s <= 0 ? 'Agotado' : s <= m ? (s + ' bajo') : s;
+        return '<span class="stock-badge ' + cls + '"><span class="stock-dot"></span>' + label + '</span>';
+      })()}</td>
       <td><span class="badge bg-${p.estado ? 'success':'secondary'}">${p.estado ? 'Activo':'Inactivo'}</span></td>
       <td>
         <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalProducto(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>
@@ -718,7 +1079,7 @@ async function eliminarProducto(id) {
   cargarProductos();
 }
 
-// ─── CATEGORIAS ──────────────────────────────────────────────
+// CATEGORIAS
 async function cargarCategorias() {
   const categorias = await api('/categorias');
   if (categorias.error) {
@@ -771,18 +1132,12 @@ function abrirModalCategoria(cat = null) {
 async function guardarCategoria() {
   const id = document.getElementById('catId').value;
   const nombre = document.getElementById('catNombre').value.trim();
-  if (!nombre) {
-    alert('Ingresa el nombre de la categoría');
-    return;
-  }
+  if (!nombre) { alert('Ingresa el nombre de la categoría'); return; }
   const body = { nombre_categoria: nombre };
   const resp = id
     ? await api(`/categorias/${id}`, { method: 'PUT', body: JSON.stringify(body) })
     : await api('/categorias', { method: 'POST', body: JSON.stringify(body) });
-  if (resp.error) {
-    alert(resp.error);
-    return;
-  }
+  if (resp.error) { alert(resp.error); return; }
   bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
   cargarCategorias();
 }
@@ -790,20 +1145,14 @@ async function guardarCategoria() {
 async function eliminarCategoria(id) {
   if (!confirm('¿Eliminar esta categoría?')) return;
   const resp = await api(`/categorias/${id}`, { method: 'DELETE' });
-  if (resp.error) {
-    alert(resp.error);
-    return;
-  }
+  if (resp.error) { alert(resp.error); return; }
   cargarCategorias();
 }
 
 function cargarCategoriasEnSelect() {
   const select = document.getElementById('prodCategoria');
   if (!select) return;
-  if (!todasCategorias.length) {
-    select.innerHTML = '<option value="">Sin categorías</option>';
-    return;
-  }
+  if (!todasCategorias.length) { select.innerHTML = '<option value="">Sin categorías</option>'; return; }
   const selected = select.value;
   select.innerHTML = todasCategorias
     .map(c => `<option value="${c.id_categoria}">${c.nombre_categoria}</option>`)
@@ -820,7 +1169,7 @@ function renderTablaSimple(filas, columnas) {
   }</tbody></table></div>`;
 }
 
-// ─── PROVEEDORES ──────────────────────────────────────────────
+// PROVEEDORES
 async function cargarProveedores() {
   const proveedores = await api('/proveedores');
   todosProveedores = Array.isArray(proveedores) ? proveedores : [];
@@ -859,11 +1208,7 @@ async function guardarProveedor() {
   const id = document.getElementById('provId').value;
   const nombre = document.getElementById('provNombre').value.trim();
   if (!nombre) return alert('Ingresa el nombre del proveedor');
-  const body = {
-    nombre,
-    telefono: document.getElementById('provTelefono').value.trim(),
-    correo: document.getElementById('provCorreo').value.trim()
-  };
+  const body = { nombre, telefono: document.getElementById('provTelefono').value.trim(), correo: document.getElementById('provCorreo').value.trim() };
   const r = id
     ? await api(`/proveedores/${id}`, { method: 'PUT', body: JSON.stringify(body) })
     : await api('/proveedores', { method: 'POST', body: JSON.stringify(body) });
@@ -879,7 +1224,7 @@ async function eliminarProveedor(id) {
   cargarProveedores();
 }
 
-// ─── CLIENTES ─────────────────────────────────────────────────
+// CLIENTES
 async function cargarClientes() {
   const clientes = await api('/clientes');
   todosClientes = Array.isArray(clientes) ? clientes : [];
@@ -915,11 +1260,7 @@ async function guardarCliente() {
   const id = document.getElementById('cliId').value;
   const nombre = document.getElementById('cliNombre').value.trim();
   if (!nombre) return alert('Ingresa el nombre del cliente');
-  const body = {
-    nombre,
-    telefono: document.getElementById('cliTelefono').value.trim(),
-    correo: document.getElementById('cliCorreo').value.trim()
-  };
+  const body = { nombre, telefono: document.getElementById('cliTelefono').value.trim(), correo: document.getElementById('cliCorreo').value.trim() };
   const r = id
     ? await api(`/clientes/${id}`, { method: 'PUT', body: JSON.stringify(body) })
     : await api('/clientes', { method: 'POST', body: JSON.stringify(body) });
@@ -935,7 +1276,7 @@ async function eliminarCliente(id) {
   cargarClientes();
 }
 
-// ─── COMPRAS ──────────────────────────────────────────────────
+// COMPRAS
 async function cargarCompras() {
   const compras = await api('/compras');
   const tbody = document.getElementById('tablaCompras');
@@ -967,8 +1308,8 @@ async function abrirModalCompra() {
 }
 
 function agregarDetalleCompra() {
-  const id_producto = parseInt(document.getElementById('compraProducto').value, 10);
-  const cantidad = parseInt(document.getElementById('compraCantidad').value, 10);
+  const id_producto   = parseInt(document.getElementById('compraProducto').value, 10);
+  const cantidad      = parseInt(document.getElementById('compraCantidad').value, 10);
   const precio_compra = parseFloat(document.getElementById('compraPrecio').value);
   if (!id_producto || !cantidad || !precio_compra) return alert('Completa producto, cantidad y precio');
   const existe = detalleCompra.find(i => i.id_producto === id_producto && Number(i.precio_compra) === Number(precio_compra));
@@ -1014,13 +1355,12 @@ async function guardarCompra() {
   cargarCompras();
 }
 
-// ─── REPORTES ────────────────────────────────────────────────
+// REPORTES
 async function cargarReportes() {
   if (usuario.rol !== 'Administrador') {
-    document.getElementById('reporteVentasDiarias').innerHTML = 'Solo disponible para administradores';
-    document.getElementById('reporteProductosVendidos').innerHTML = 'Solo disponible para administradores';
-    document.getElementById('reporteStockBajo').innerHTML = 'Solo disponible para administradores';
-    document.getElementById('reporteComprasProveedor').innerHTML = 'Solo disponible para administradores';
+    ['reporteVentasDiarias','reporteProductosVendidos','reporteStockBajo','reporteComprasProveedor'].forEach(id => {
+      document.getElementById(id).innerHTML = 'Solo disponible para administradores';
+    });
     return;
   }
   const [ventas, productos, stock, compras] = await Promise.all([
@@ -1051,7 +1391,7 @@ async function cargarReportes() {
   ]);
 }
 
-// ─── USUARIOS ────────────────────────────────────────────────
+// USUARIOS
 async function cargarUsuarios() {
   if (usuario.rol !== 'Administrador') return;
   const usuarios = await api('/auth/usuarios');
@@ -1111,21 +1451,17 @@ async function guardarUsuario() {
 }
 
 async function toggleUsuario(id, estado) {
-  const r = await api(`/auth/usuarios/${id}/estado`, {
-    method: 'PUT',
-    body: JSON.stringify({ estado })
-  });
+  const r = await api(`/auth/usuarios/${id}/estado`, { method: 'PUT', body: JSON.stringify({ estado }) });
   if (r.error) return alert(r.error);
   cargarUsuarios();
 }
 
-// ─── POS ─────────────────────────────────────────────────────
+// POS
 async function iniciarPOS() {
   carritoItems = [];
   ventaActualId = null;
   renderCarrito();
   document.getElementById('posResultados').innerHTML = '';
-  // Crear venta en backend
   const venta = await api('/ventas/nueva', { method:'POST', body: JSON.stringify({}) });
   ventaActualId = venta.id_venta;
 }
@@ -1141,7 +1477,7 @@ async function buscarProductoPOS(q) {
         <div class="fw-semibold small">${p.nombre}</div>
         <div class="d-flex justify-content-between mt-1">
           <span class="text-primary fw-bold">Q ${(p.precio_venta||0).toFixed(2)}</span>
-          <span class="badge ${p.stock_actual <= 0 ? 'bg-danger' : p.stock_actual <= p.stock_minimo ? 'bg-warning text-dark' : 'bg-success'}">
+          <span class="stock-badge ${p.stock_actual <= 0 ? 'critical' : p.stock_actual <= p.stock_minimo ? 'warning' : 'ok'}" style="font-size:.72rem;">
             Stock: ${p.stock_actual}
           </span>
         </div>
@@ -1204,8 +1540,6 @@ async function finalizarVenta() {
   const metodo = document.getElementById('posMetodoPago').value;
   if (!metodo) { alert('Selecciona el método de pago'); return; }
   if (!ventaActualId) { alert('Error: no hay venta activa'); return; }
-
-  // Agregar cada item al detalle en el backend
   for (const item of carritoItems) {
     const r = await api('/ventas/agregar-producto', {
       method: 'POST',
@@ -1213,32 +1547,30 @@ async function finalizarVenta() {
     });
     if (r.error) { alert('Error: ' + r.error); return; }
   }
-
-  // Finalizar venta
   const r = await api('/ventas/finalizar', {
     method: 'POST',
     body: JSON.stringify({ id_venta: ventaActualId, metodo_pago: metodo })
   });
   if (r.error) { alert('Error: ' + r.error); return; }
-
   const total = carritoItems.reduce((s, i) => s + i.precio * i.cantidad, 0);
   alert(`✅ Venta #${ventaActualId} completada\nTotal: Q ${total.toFixed(2)}\nMétodo: ${metodo}`);
   iniciarPOS();
 }
 
-// ─── INIT ─────────────────────────────────────────────────────
+// INIT
 window.addEventListener('keydown', e => {
   if (e.key === 'Enter' && document.getElementById('loginPage').style.display !== 'none') hacerLogin();
 });
 
-// Verificar sesión guardada
-const savedToken = localStorage.getItem('sm_token');
-const savedUser  = localStorage.getItem('sm_usuario');
-if (savedToken && savedUser) {
-  token   = savedToken;
-  usuario = JSON.parse(savedUser);
-  iniciarApp();
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const savedToken = localStorage.getItem('sm_token');
+  const savedUser  = localStorage.getItem('sm_usuario');
+  if (savedToken && savedUser) {
+    token   = savedToken;
+    usuario = JSON.parse(savedUser);
+    iniciarApp();
+  }
+});
 </script>
 </body>
 </html>

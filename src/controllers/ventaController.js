@@ -88,4 +88,13 @@ const anular = async (req, res) => {
   }
 };
 
-module.exports = { nueva, agregarProducto, finalizar, getById, getByPeriodo, anular };
+const getVentasPorDia = async (req, res) => {
+  try {
+    const dias = parseInt(req.query.dias) || 7;
+    const datos = await ventaRepo.getVentasPorDia(dias);
+    res.json(datos);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+module.exports = { nueva, agregarProducto, finalizar, getById, getByPeriodo, anular, getVentasPorDia };

@@ -61,15 +61,20 @@ const actualizar = async (id, producto) => {
     .input('descripcion',   sql.NVarChar(255), producto.descripcion || '')
     .input('precio_compra', sql.Decimal(10,2), producto.precio_compra)
     .input('precio_venta',  sql.Decimal(10,2), producto.precio_venta)
+    .input('stock_actual',  sql.Int,           producto.stock_actual)  // ← FIX: ahora sí se actualiza
     .input('stock_minimo',  sql.Int,           producto.stock_minimo)
     .input('codigo_barra',  sql.NVarChar(50),  producto.codigo_barra || '')
     .input('id_categoria',  sql.Int,           producto.id_categoria)
     .query(`
       UPDATE Productos SET
-        nombre = @nombre, descripcion = @descripcion,
-        precio_compra = @precio_compra, precio_venta = @precio_venta,
-        stock_minimo = @stock_minimo, codigo_barra = @codigo_barra,
-        id_categoria = @id_categoria
+        nombre        = @nombre,
+        descripcion   = @descripcion,
+        precio_compra = @precio_compra,
+        precio_venta  = @precio_venta,
+        stock_actual  = @stock_actual,
+        stock_minimo  = @stock_minimo,
+        codigo_barra  = @codigo_barra,
+        id_categoria  = @id_categoria
       WHERE id_producto = @id
     `);
 };
@@ -93,6 +98,7 @@ const actualizarStock = async (id, cantidad, tipo) => {
       WHERE id_producto = @id
     `);
 };
+
 
 const getStockBajo = async () => {
   const pool = await poolPromise;

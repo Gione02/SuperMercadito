@@ -3,11 +3,14 @@ const router  = express.Router();
 const ventaCtrl = require('../controllers/ventaController');
 const { verificarToken, soloAdmin } = require('../middlewares/authMiddleware');
 
-// POST /api/ventas/nueva            → iniciar nueva venta
+// GET  /api/ventas/estadisticas/por-dia  ← DEBE IR ANTES de /:id
+router.get('/estadisticas/por-dia', verificarToken, soloAdmin, ventaCtrl.getVentasPorDia);
+
+// POST /api/ventas/nueva
 router.post('/nueva',             verificarToken, ventaCtrl.nueva);
-// POST /api/ventas/agregar-producto → agregar producto al detalle
+// POST /api/ventas/agregar-producto
 router.post('/agregar-producto',  verificarToken, ventaCtrl.agregarProducto);
-// POST /api/ventas/finalizar        → finalizar venta y actualizar stock
+// POST /api/ventas/finalizar
 router.post('/finalizar',         verificarToken, ventaCtrl.finalizar);
 // GET  /api/ventas/reporte?inicio=&fin=
 router.get('/reporte',            verificarToken, soloAdmin, ventaCtrl.getByPeriodo);

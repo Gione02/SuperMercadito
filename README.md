@@ -100,6 +100,7 @@ http://localhost:3000
 | Usuario | Correo | Contraseña | Rol |
 |---------|--------|------------|-----|
 | Administrador | admin@mercadito.com | Admin123! | Administrador |
+
 | Carlos Cajero | cajero@mercadito.com | Admin123! | Cajero |
 
 ---
