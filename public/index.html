@@ -255,7 +255,6 @@
   <div class="main-content">
 
     <!-- DASHBOARD -->
-    <!-- DASHBOARD -->
     <div id="view-dashboard" class="view active">
 
       <div id="stockAlertBar" class="stock-alert-bar mb-4 d-none">
@@ -822,7 +821,6 @@ async function cargarDashboard() {
     document.getElementById('tablaUltimasVentas').innerHTML = '<p class="text-muted text-center small py-2">Solo disponible para administradores</p>';
   }
 
-  // Cargar gráficas al iniciar dashboard (delay para que el canvas tenga dimensiones)
   setTimeout(() => { cargarGraficaVentas(7); cargarGraficaDona(); }, 80);
 }
 
@@ -835,14 +833,12 @@ async function cargarGraficaVentas(dias = 7) {
     const datos = await api(`/ventas/estadisticas/por-dia?dias=${dias}`);
     if (!Array.isArray(datos)) return;
 
-    // Construir mapa de datos reales por fecha
     const dataMap = {};
     datos.forEach(d => {
       const dateStr = typeof d.fecha === 'string' ? d.fecha.split('T')[0] : new Date(d.fecha).toISOString().split('T')[0];
       dataMap[dateStr] = { ventas: d.total_ventas, ingresos: parseFloat(d.total_ingresos) };
     });
 
-    // Generar todos los días del período (con 0 si no hay ventas)
     const labels = [], ventas = [], ingresos = [];
     for (let i = dias - 1; i >= 0; i--) {
       const d = new Date();
@@ -853,7 +849,6 @@ async function cargarGraficaVentas(dias = 7) {
       ingresos.push(dataMap[key]?.ingresos || 0);
     }
 
-    // Badge de tendencia
     const totalVentas = ventas.reduce((a,b)=>a+b,0);
     const badge = document.getElementById('grafBadge');
     if (badge) {
@@ -1019,9 +1014,9 @@ function renderTablaProductos(productos) {
       <td>${p.nombre_categoria||'-'}</td>
       <td>Q ${(p.precio_venta||0).toFixed(2)}</td>
       <td>${(function(){
-        var s = p.stock_actual, m = p.stock_minimo;
-        var cls = s <= 0 ? 'critical' : s <= m ? 'warning' : 'ok';
-        var label = s <= 0 ? 'Agotado' : s <= m ? (s + ' bajo') : s;
+        var s = p.stock_actual;
+        var cls = s <= 0 ? 'critical' : s <= 20 ? 'critical' : s <= 50 ? 'warning' : 'ok';
+        var label = s <= 0 ? 'Agotado' : s <= 50 ? (s + ' bajo') : s;
         return '<span class="stock-badge ' + cls + '"><span class="stock-dot"></span>' + label + '</span>';
       })()}</td>
       <td><span class="badge bg-${p.estado ? 'success':'secondary'}">${p.estado ? 'Activo':'Inactivo'}</span></td>
@@ -1477,7 +1472,7 @@ async function buscarProductoPOS(q) {
         <div class="fw-semibold small">${p.nombre}</div>
         <div class="d-flex justify-content-between mt-1">
           <span class="text-primary fw-bold">Q ${(p.precio_venta||0).toFixed(2)}</span>
-          <span class="stock-badge ${p.stock_actual <= 0 ? 'critical' : p.stock_actual <= p.stock_minimo ? 'warning' : 'ok'}" style="font-size:.72rem;">
+          <span class="stock-badge ${p.stock_actual <= 0 ? 'critical' : p.stock_actual <= 20 ? 'critical' : p.stock_actual <= 50 ? 'warning' : 'ok'}" style="font-size:.72rem;">
             Stock: ${p.stock_actual}
           </span>
         </div>
