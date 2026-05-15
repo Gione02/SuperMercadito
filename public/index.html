@@ -179,6 +179,143 @@
       50% { opacity: .2; }
     }
 
+    /* ---- VIEW ANIMATIONS ---- */
+    .view { display:none; opacity:0; transform:translateY(12px); }
+    .view.active { display:block; animation: viewIn .35s cubic-bezier(.4,0,.2,1) forwards; }
+    @keyframes viewIn {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ---- PAGE HEADER ---- */
+    .page-header {
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:1.5rem;
+    }
+    .page-header h3 {
+      font-size:1.25rem; font-weight:700; margin:0; letter-spacing:-.02em; color:var(--gray-900);
+    }
+    .page-header p { font-size:.82rem; color:var(--gray-400); margin:.15rem 0 0; }
+
+    /* ---- MODERN TABLE CARD ---- */
+    .table-card {
+      background:#fff; border-radius:var(--radius); border:1px solid var(--gray-200);
+      box-shadow:var(--shadow); overflow:hidden;
+    }
+    .table-card .tc-toolbar {
+      padding:1rem 1.25rem; border-bottom:1px solid var(--gray-100);
+      display:flex; align-items:center; gap:.75rem; flex-wrap:wrap;
+    }
+    .table-card .tc-search {
+      flex:1; min-width:180px; max-width:280px;
+      border:1.5px solid var(--gray-200); border-radius:10px;
+      padding:.5rem .9rem .5rem 2.2rem; font-size:.875rem;
+      font-family:'DM Sans',sans-serif; outline:none; transition:.2s;
+      background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zm-5.242 1.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") no-repeat .75rem center;
+    }
+    .table-card .tc-search:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+    .table-card table { width:100%; border-collapse:collapse; }
+    .table-card thead tr { border-bottom:1px solid var(--gray-100); }
+    .table-card thead th {
+      padding:.75rem 1.25rem; font-size:.72rem; font-weight:700;
+      text-transform:uppercase; letter-spacing:.06em; color:var(--gray-400);
+      background:var(--gray-50); white-space:nowrap;
+    }
+    .table-card tbody tr {
+      border-bottom:1px solid var(--gray-100); transition:background .15s;
+    }
+    .table-card tbody tr:last-child { border-bottom:none; }
+    .table-card tbody tr:hover { background:#f8fafc; }
+    .table-card tbody td { padding:.85rem 1.25rem; font-size:.875rem; color:var(--gray-900); }
+    .table-card .tc-empty { padding:3rem; text-align:center; color:var(--gray-400); font-size:.875rem; }
+
+    /* ---- BUTTONS ---- */
+    .btn-primary-modern {
+      background:var(--blue); color:#fff; border:none; border-radius:10px;
+      padding:.55rem 1.1rem; font-size:.875rem; font-weight:600;
+      font-family:'DM Sans',sans-serif; cursor:pointer; display:inline-flex;
+      align-items:center; gap:.4rem; transition:.18s; white-space:nowrap;
+    }
+    .btn-primary-modern:hover { background:#1d4ed8; transform:translateY(-1px); box-shadow:0 4px 12px rgba(37,99,235,.3); }
+    .btn-icon {
+      width:32px; height:32px; border-radius:8px; border:1.5px solid var(--gray-200);
+      background:#fff; display:inline-flex; align-items:center; justify-content:center;
+      font-size:.8rem; cursor:pointer; transition:.15s; color:var(--gray-600);
+    }
+    .btn-icon:hover.edit { border-color:#2563eb; color:#2563eb; background:#eff6ff; }
+    .btn-icon:hover.del  { border-color:#dc2626; color:#dc2626; background:#fef2f2; }
+
+    /* ---- STATUS BADGE ---- */
+    .status-badge {
+      display:inline-flex; align-items:center; gap:.3rem;
+      padding:.2rem .65rem; border-radius:20px; font-size:.75rem; font-weight:600;
+    }
+    .status-badge.active { background:#f0fdf4; color:#16a34a; }
+    .status-badge.inactive { background:#f8fafc; color:#94a3b8; }
+    .status-badge::before { content:''; width:6px; height:6px; border-radius:50%; background:currentColor; }
+
+    /* ---- POS MODERN ---- */
+    .pos-grid { display:grid; grid-template-columns:1fr 340px; gap:1.25rem; height:calc(100vh - 120px); }
+    .pos-left { display:flex; flex-direction:column; gap:1rem; overflow:hidden; }
+    .pos-right { display:flex; flex-direction:column; }
+    .pos-search-wrap {
+      background:#fff; border-radius:var(--radius); border:1px solid var(--gray-200);
+      box-shadow:var(--shadow); padding:1rem 1.25rem;
+    }
+    .pos-search-input {
+      width:100%; border:1.5px solid var(--gray-200); border-radius:10px;
+      padding:.6rem 1rem .6rem 2.4rem; font-size:.9rem; font-family:'DM Sans',sans-serif;
+      outline:none; transition:.2s;
+      background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='15' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398l3.85 3.85a1 1 0 0 0 1.415-1.415l-3.868-3.833zm-5.242 1.156a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") no-repeat .8rem center;
+    }
+    .pos-search-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(37,99,235,.1); }
+    .pos-products-grid {
+      flex:1; overflow-y:auto; background:#fff; border-radius:var(--radius);
+      border:1px solid var(--gray-200); box-shadow:var(--shadow);
+      padding:1rem; display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:.75rem;
+      align-content:start;
+    }
+    .pos-product-card {
+      border:1.5px solid var(--gray-200); border-radius:12px; padding:1rem;
+      cursor:pointer; transition:.18s; background:#fff;
+      display:flex; flex-direction:column; gap:.5rem; min-width:0;
+    }
+    .pos-product-card:hover { border-color:var(--blue); background:var(--blue-light); transform:translateY(-2px); box-shadow:0 4px 12px rgba(37,99,235,.1); }
+    .pos-product-card.stock-low { opacity:.55; cursor:not-allowed; }
+    .pos-product-card .pp-name {
+      font-weight:600; font-size:.875rem; color:var(--gray-900);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      display:block; width:100%;
+    }
+    .pos-product-card .pp-bottom {
+      display:flex; justify-content:space-between; align-items:center; gap:.4rem; flex-wrap:nowrap;
+    }
+    .pos-product-card .pp-price { font-size:1.05rem; font-weight:700; color:var(--blue); font-family:'DM Mono',monospace; white-space:nowrap; }
+    .pos-cart {
+      flex:1; background:#fff; border-radius:var(--radius); border:1px solid var(--gray-200);
+      box-shadow:var(--shadow); display:flex; flex-direction:column; overflow:hidden;
+    }
+    .pos-cart-header { padding:1rem 1.25rem; border-bottom:1px solid var(--gray-100); display:flex; justify-content:space-between; align-items:center; }
+    .pos-cart-body { flex:1; overflow-y:auto; padding:.5rem 0; }
+    .pos-cart-footer { padding:1rem 1.25rem; border-top:1px solid var(--gray-100); }
+    .cart-item { padding:.6rem 1.25rem; display:flex; align-items:center; gap:.75rem; transition:background .15s; }
+    .cart-item:hover { background:var(--gray-50); }
+    .cart-item .ci-name { font-size:.85rem; font-weight:600; flex:1; color:var(--gray-900); }
+    .cart-item .ci-price { font-size:.78rem; color:var(--gray-400); }
+    .cart-item .ci-qty { display:flex; align-items:center; gap:.4rem; }
+    .cart-item .qty-btn {
+      width:24px; height:24px; border-radius:6px; border:1.5px solid var(--gray-200);
+      background:#fff; font-size:.85rem; cursor:pointer; display:flex; align-items:center;
+      justify-content:center; transition:.15s; font-weight:700; color:var(--gray-600);
+    }
+    .cart-item .qty-btn:hover { border-color:var(--blue); color:var(--blue); }
+    .cart-item .ci-subtotal { font-size:.875rem; font-weight:700; color:var(--blue); font-family:'DM Mono',monospace; min-width:60px; text-align:right; }
+
+    /* ---- REPORTS GRID ---- */
+    .report-card { background:#fff; border-radius:var(--radius); border:1px solid var(--gray-200); box-shadow:var(--shadow); padding:1.25rem; }
+    .report-card h6 { font-size:.875rem; font-weight:700; margin:0 0 1rem; color:var(--gray-900); }
+
+    @media (max-width: 900px) { .pos-grid { grid-template-columns:1fr; } }
     @media (max-width: 768px) {
       :root { --sidebar-w: 0px; }
       .sidebar { transform: translateX(-240px); }
@@ -197,11 +334,11 @@
     <div id="loginError" class="alert alert-danger d-none"></div>
     <div class="mb-3">
       <label class="form-label fw-semibold">Correo electrónico</label>
-      <input id="loginCorreo" type="email" class="form-control" placeholder="admin@mercadito.com"/>
+      <input id="loginCorreo" type="email" class="form-control" placeholder="Correo electrónico"/>
     </div>
     <div class="mb-4">
       <label class="form-label fw-semibold">Contraseña</label>
-      <input id="loginPassword" type="password" class="form-control" placeholder="••••••••"/>
+      <input id="loginPassword" type="password" class="form-control" placeholder="Contraseña"/>
     </div>
     <button onclick="hacerLogin()" class="btn btn-primary w-100 py-2 fw-semibold">
       <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
@@ -254,6 +391,7 @@
   <!-- Main Content -->
   <div class="main-content">
 
+    <!-- DASHBOARD -->
     <!-- DASHBOARD -->
     <div id="view-dashboard" class="view active">
 
@@ -374,43 +512,48 @@
 
     <!-- POS -->
     <div id="view-pos" class="view">
-      <div class="row g-3">
-        <div class="col-lg-7">
-          <div class="stat-card mb-3">
-            <div class="d-flex gap-2">
-              <input id="posBuscar" type="text" class="form-control" placeholder="Buscar producto por nombre o código de barras..."
-                oninput="buscarProductoPOS(this.value)"/>
-              <button class="btn btn-outline-primary" onclick="buscarProductoPOS(document.getElementById('posBuscar').value)">
-                <i class="bi bi-search"></i>
-              </button>
+      <div class="pos-grid">
+        <!-- Left: Search + Products -->
+        <div class="pos-left">
+          <div class="pos-search-wrap">
+            <input id="posBuscar" type="text" class="pos-search-input"
+              placeholder="Buscar producto por nombre o código de barras..."
+              oninput="buscarProductoPOS(this.value)" autocomplete="off"/>
+          </div>
+          <div class="pos-products-grid" id="posResultados">
+            <div style="grid-column:1/-1;text-align:center;color:var(--gray-400);padding:2rem;font-size:.875rem;">
+              <i class="bi bi-search" style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>
+              Escribe para buscar productos
             </div>
-            <div id="posResultados" class="row g-2 mt-1"></div>
           </div>
         </div>
-        <div class="col-lg-5">
-          <div class="stat-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-              <h6 class="fw-bold mb-0"><i class="bi bi-cart3 me-2 text-primary"></i>Venta en curso</h6>
-              <button class="btn btn-sm btn-outline-danger" onclick="limpiarCarrito()"><i class="bi bi-trash"></i></button>
+        <!-- Right: Cart -->
+        <div class="pos-right">
+          <div class="pos-cart">
+            <div class="pos-cart-header">
+              <span style="font-weight:700;font-size:.95rem;"><i class="bi bi-cart3 me-2" style="color:var(--blue);"></i>Venta en curso</span>
+              <button class="btn-icon del" onclick="limpiarCarrito()" title="Limpiar carrito"><i class="bi bi-trash"></i></button>
             </div>
-            <div id="posCarrito" class="mb-3" style="max-height:280px;overflow-y:auto;">
-              <p class="text-muted text-center small py-3">Agrega productos desde la búsqueda</p>
+            <div class="pos-cart-body" id="posCarrito">
+              <div style="text-align:center;color:var(--gray-400);padding:2rem;font-size:.85rem;">
+                <i class="bi bi-cart-x" style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>
+                Agrega productos desde la búsqueda
+              </div>
             </div>
-            <div class="border-top pt-2">
-              <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
-                <span>Total</span>
-                <span class="text-primary">Q <span id="posTotal">0.00</span></span>
+            <div class="pos-cart-footer">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <span style="font-size:.875rem;color:var(--gray-600);font-weight:500;">Total a pagar</span>
+                <span style="font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--blue);">Q <span id="posTotal">0.00</span></span>
               </div>
-              <div class="mb-2">
-                <select id="posMetodoPago" class="form-select">
-                  <option value="">-- Método de pago --</option>
-                  <option value="Efectivo">Efectivo</option>
-                  <option value="Tarjeta">Tarjeta</option>
-                  <option value="Transferencia">Transferencia</option>
-                </select>
-              </div>
-              <button onclick="finalizarVenta()" class="btn btn-success w-100 fw-semibold py-2">
-                <i class="bi bi-check-circle me-2"></i>Finalizar Venta
+              <select id="posMetodoPago" style="width:100%;border:1.5px solid var(--gray-200);border-radius:10px;padding:.55rem .9rem;font-size:.875rem;font-family:'DM Sans',sans-serif;margin-bottom:.75rem;outline:none;background:#fff;color:var(--gray-900);">
+                <option value="">-- Método de pago --</option>
+                <option value="Efectivo">💵 Efectivo</option>
+                <option value="Tarjeta">💳 Tarjeta</option>
+                <option value="Transferencia">📲 Transferencia</option>
+              </select>
+              <button onclick="finalizarVenta()" style="width:100%;background:#16a34a;color:#fff;border:none;border-radius:10px;padding:.7rem;font-size:.95rem;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:.18s;"
+                onmouseover="this.style.background='#15803d'" onmouseout="this.style.background='#16a34a'">
+                <i class="bi bi-check-circle"></i> Finalizar Venta
               </button>
             </div>
           </div>
@@ -420,15 +563,23 @@
 
     <!-- PRODUCTOS -->
     <div id="view-productos" class="view">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div><input type="text" id="filtroProductos" class="form-control" placeholder="Buscar producto..." oninput="filtrarTablaProductos(this.value)" style="width:280px"/></div>
-        <button class="btn btn-primary" onclick="abrirModalProducto()"><i class="bi bi-plus-lg me-1"></i>Nuevo producto</button>
+      <div class="page-header">
+        <div>
+          <h3>Productos</h3>
+          <p>Gestiona tu inventario de productos</p>
+        </div>
+        <button class="btn-primary-modern" onclick="abrirModalProducto()">
+          <i class="bi bi-plus-lg"></i> Nuevo producto
+        </button>
       </div>
-      <div class="stat-card">
+      <div class="table-card">
+        <div class="tc-toolbar">
+          <input type="text" class="tc-search" id="filtroProductos" placeholder="Buscar producto o código..." oninput="filtrarTablaProductos(this.value)"/>
+        </div>
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
+          <table>
             <thead><tr><th>Nombre</th><th>Categoría</th><th>P. Venta</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tablaProductos"><tr><td colspan="6" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+            <tbody id="tablaProductos"><tr><td colspan="6" class="tc-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -436,80 +587,111 @@
 
     <!-- CATEGORIAS -->
     <div id="view-categorias" class="view">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <div><input type="text" id="filtroCategorias" class="form-control" placeholder="Buscar categoría..." oninput="filtrarTablaCategorias(this.value)" style="width:280px"/></div>
-        <button class="btn btn-primary" id="btnNuevaCategoria" onclick="abrirModalCategoria()"><i class="bi bi-plus-lg me-1"></i>Nueva categoría</button>
+      <div class="page-header">
+        <div>
+          <h3>Categorías</h3>
+          <p>Organiza tus productos por categoría</p>
+        </div>
+        <button class="btn-primary-modern" id="btnNuevaCategoria" onclick="abrirModalCategoria()">
+          <i class="bi bi-plus-lg"></i> Nueva categoría
+        </button>
       </div>
-      <div class="stat-card">
+      <div class="table-card">
+        <div class="tc-toolbar">
+          <input type="text" class="tc-search" id="filtroCategorias" placeholder="Buscar categoría..." oninput="filtrarTablaCategorias(this.value)"/>
+        </div>
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
-            <thead><tr><th>Nombre</th><th>Productos activos</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tablaCategorias"><tr><td colspan="4" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+          <table>
+            <thead><tr><th>Nombre</th><th>Productos</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody id="tablaCategorias"><tr><td colspan="4" class="tc-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
     <div id="view-compras" class="view">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0">Registro de compras</h6>
-        <button class="btn btn-primary" onclick="abrirModalCompra()"><i class="bi bi-plus-lg me-1"></i>Nueva compra</button>
+      <div class="page-header">
+        <div>
+          <h3>Compras</h3>
+          <p>Registro de compras a proveedores</p>
+        </div>
+        <button class="btn-primary-modern" onclick="abrirModalCompra()">
+          <i class="bi bi-plus-lg"></i> Nueva compra
+        </button>
       </div>
-      <div class="stat-card">
+      <div class="table-card">
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
+          <table>
             <thead><tr><th>#</th><th>Fecha</th><th>Proveedor</th><th>Total</th><th>Estado</th></tr></thead>
-            <tbody id="tablaCompras"><tr><td colspan="5" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+            <tbody id="tablaCompras"><tr><td colspan="5" class="tc-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
     <div id="view-proveedores" class="view">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0">Catálogo de proveedores</h6>
-        <button class="btn btn-primary" onclick="abrirModalProveedor()"><i class="bi bi-plus-lg me-1"></i>Nuevo proveedor</button>
+      <div class="page-header">
+        <div>
+          <h3>Proveedores</h3>
+          <p>Gestiona tus proveedores</p>
+        </div>
+        <button class="btn-primary-modern" onclick="abrirModalProveedor()">
+          <i class="bi bi-plus-lg"></i> Nuevo proveedor
+        </button>
       </div>
-      <div class="stat-card">
+      <div class="table-card">
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
+          <table>
             <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
-            <tbody id="tablaProveedores"><tr><td colspan="4" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+            <tbody id="tablaProveedores"><tr><td colspan="4" class="tc-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
     <div id="view-clientes" class="view">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0">Clientes</h6>
-        <button class="btn btn-primary" onclick="abrirModalCliente()"><i class="bi bi-plus-lg me-1"></i>Nuevo cliente</button>
+      <div class="page-header">
+        <div>
+          <h3>Clientes</h3>
+          <p>Gestiona tu base de clientes</p>
+        </div>
+        <button class="btn-primary-modern" onclick="abrirModalCliente()">
+          <i class="bi bi-plus-lg"></i> Nuevo cliente
+        </button>
       </div>
-      <div class="stat-card">
+      <div class="table-card">
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
+          <table>
             <thead><tr><th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Acciones</th></tr></thead>
-            <tbody id="tablaClientes"><tr><td colspan="4" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+            <tbody id="tablaClientes"><tr><td colspan="4" class="tc-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
     <div id="view-reportes" class="view">
+      <div class="page-header">
+        <div><h3>Reportes</h3><p>Análisis y estadísticas del negocio</p></div>
+      </div>
       <div class="row g-3">
-        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Ventas diarias</h6><div id="reporteVentasDiarias" class="mt-2">Cargando...</div></div></div>
-        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Productos más vendidos</h6><div id="reporteProductosVendidos" class="mt-2">Cargando...</div></div></div>
-        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Stock bajo</h6><div id="reporteStockBajo" class="mt-2">Cargando...</div></div></div>
-        <div class="col-md-6"><div class="stat-card"><h6 class="fw-bold">Compras por proveedor</h6><div id="reporteComprasProveedor" class="mt-2">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="report-card"><h6><i class="bi bi-calendar-check me-2 text-primary"></i>Ventas diarias</h6><div id="reporteVentasDiarias">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="report-card"><h6><i class="bi bi-trophy me-2 text-warning"></i>Productos más vendidos</h6><div id="reporteProductosVendidos">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="report-card"><h6><i class="bi bi-exclamation-triangle me-2 text-danger"></i>Stock bajo</h6><div id="reporteStockBajo">Cargando...</div></div></div>
+        <div class="col-md-6"><div class="report-card"><h6><i class="bi bi-truck me-2 text-success"></i>Compras por proveedor</h6><div id="reporteComprasProveedor">Cargando...</div></div></div>
       </div>
     </div>
     <div id="view-usuarios" class="view">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold mb-0">Gestión de usuarios</h6>
-        <button class="btn btn-primary" onclick="abrirModalUsuario()"><i class="bi bi-plus-lg me-1"></i>Nuevo usuario</button>
+      <div class="page-header">
+        <div>
+          <h3>Usuarios</h3>
+          <p>Gestiona los accesos al sistema</p>
+        </div>
+        <button class="btn-primary-modern" onclick="abrirModalUsuario()">
+          <i class="bi bi-plus-lg"></i> Nuevo usuario
+        </button>
       </div>
-      <div class="stat-card">
+      <div class="table-card">
         <div class="table-responsive">
-          <table class="table table-hover mb-0">
+          <table>
             <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
-            <tbody id="tablaUsuarios"><tr><td colspan="5" class="text-center py-3 text-muted">Cargando...</td></tr></tbody>
+            <tbody id="tablaUsuarios"><tr><td colspan="5" class="tc-empty">Cargando...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -688,10 +870,59 @@
   </div>
 </div>
 
+<!-- TOAST CONTAINER -->
+<div id="toastContainer" style="position:fixed;top:1.25rem;right:1.25rem;z-index:9999;display:flex;flex-direction:column;gap:.6rem;pointer-events:none;"></div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(15,23,42,.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:2rem;width:100%;max-width:380px;margin:1rem;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:viewIn .2s ease;">
+    <div id="confirmIcon" style="font-size:2.5rem;text-align:center;margin-bottom:.75rem;"></div>
+    <h5 id="confirmTitle" style="text-align:center;font-weight:700;margin:0 0 .5rem;font-size:1.1rem;"></h5>
+    <p id="confirmMsg" style="text-align:center;color:#64748b;font-size:.875rem;margin:0 0 1.5rem;"></p>
+    <div style="display:flex;gap:.75rem;">
+      <button id="confirmCancel" style="flex:1;padding:.6rem;border:1.5px solid #e2e8f0;border-radius:10px;background:#fff;font-family:DM Sans,sans-serif;font-size:.875rem;font-weight:600;cursor:pointer;color:#64748b;">Cancelar</button>
+      <button id="confirmOk" style="flex:1;padding:.6rem;border:none;border-radius:10px;font-family:DM Sans,sans-serif;font-size:.875rem;font-weight:700;cursor:pointer;color:#fff;background:#dc2626;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const API = '/api';
+
+// ---- TOAST ----
+function toast(msg, type) {
+  type = type || 'success';
+  var colors = {
+    success: { bg:'#f0fdf4', border:'#bbf7d0', color:'#15803d', icon:'&#10003;' },
+    error:   { bg:'#fef2f2', border:'#fecaca', color:'#dc2626', icon:'&#10005;' },
+    warning: { bg:'#fffbeb', border:'#fde68a', color:'#d97706', icon:'&#9888;' },
+    info:    { bg:'#eff6ff', border:'#bfdbfe', color:'#2563eb', icon:'&#9432;' }
+  };
+  var c = colors[type] || colors.success;
+  var el = document.createElement('div');
+  el.style.cssText = 'background:'+c.bg+';border:1.5px solid '+c.border+';color:'+c.color+';border-radius:12px;padding:.75rem 1.1rem;font-size:.875rem;font-weight:600;font-family:DM Sans,sans-serif;display:flex;align-items:center;gap:.6rem;box-shadow:0 4px 20px rgba(0,0,0,.1);pointer-events:all;min-width:240px;max-width:340px;transition:opacity .3s,transform .3s;';
+  el.innerHTML = '<span style="font-size:1.1rem;">'+c.icon+'</span><span style="flex:1;">'+msg+'</span>';
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(function(){ el.style.opacity='0'; el.style.transform='translateX(40px)'; setTimeout(function(){ el.remove(); },300); }, 3000);
+}
+
+// ---- CONFIRMAR ----
+function confirmar(titulo, mensaje, onOk, tipo) {
+  tipo = tipo || 'danger';
+  var bgColors = { danger:'#dc2626', warning:'#d97706', info:'#2563eb' };
+  var icons    = { danger:'🗑️', warning:'⚠️', info:'ℹ️' };
+  document.getElementById('confirmIcon').textContent  = icons[tipo] || '❓';
+  document.getElementById('confirmTitle').textContent = titulo;
+  document.getElementById('confirmMsg').textContent   = mensaje;
+  document.getElementById('confirmOk').style.background = bgColors[tipo] || '#dc2626';
+  var modal = document.getElementById('confirmModal');
+  modal.style.display = 'flex';
+  var close = function(){ modal.style.display = 'none'; };
+  document.getElementById('confirmCancel').onclick = close;
+  document.getElementById('confirmOk').onclick = function(){ close(); onOk(); };
+}
 let token = null, usuario = null;
 let carritoItems = [], ventaActualId = null;
 let todosProductos = [];
@@ -821,6 +1052,7 @@ async function cargarDashboard() {
     document.getElementById('tablaUltimasVentas').innerHTML = '<p class="text-muted text-center small py-2">Solo disponible para administradores</p>';
   }
 
+  // Cargar gráficas al iniciar dashboard (delay para que el canvas tenga dimensiones)
   setTimeout(() => { cargarGraficaVentas(7); cargarGraficaDona(); }, 80);
 }
 
@@ -833,12 +1065,14 @@ async function cargarGraficaVentas(dias = 7) {
     const datos = await api(`/ventas/estadisticas/por-dia?dias=${dias}`);
     if (!Array.isArray(datos)) return;
 
+    // Construir mapa de datos reales por fecha
     const dataMap = {};
     datos.forEach(d => {
       const dateStr = typeof d.fecha === 'string' ? d.fecha.split('T')[0] : new Date(d.fecha).toISOString().split('T')[0];
       dataMap[dateStr] = { ventas: d.total_ventas, ingresos: parseFloat(d.total_ingresos) };
     });
 
+    // Generar todos los días del período (con 0 si no hay ventas)
     const labels = [], ventas = [], ingresos = [];
     for (let i = dias - 1; i >= 0; i--) {
       const d = new Date();
@@ -849,6 +1083,7 @@ async function cargarGraficaVentas(dias = 7) {
       ingresos.push(dataMap[key]?.ingresos || 0);
     }
 
+    // Badge de tendencia
     const totalVentas = ventas.reduce((a,b)=>a+b,0);
     const badge = document.getElementById('grafBadge');
     if (badge) {
@@ -1015,14 +1250,14 @@ function renderTablaProductos(productos) {
       <td>Q ${(p.precio_venta||0).toFixed(2)}</td>
       <td>${(function(){
         var s = p.stock_actual;
-        var cls = s <= 0 ? 'critical' : s <= 20 ? 'critical' : s <= 50 ? 'warning' : 'ok';
-        var label = s <= 0 ? 'Agotado' : s <= 50 ? (s + ' bajo') : s;
+        var cls = s <= 0 ? 'critical' : s < 20 ? 'warning' : 'ok';
+        var label = s <= 0 ? 'Agotado' : s < 20 ? (s + ' bajo') : s;
         return '<span class="stock-badge ' + cls + '"><span class="stock-dot"></span>' + label + '</span>';
       })()}</td>
-      <td><span class="badge bg-${p.estado ? 'success':'secondary'}">${p.estado ? 'Activo':'Inactivo'}</span></td>
+      <td><span class="status-badge ${p.estado ? 'active':'inactive'}">${p.estado ? 'Activo':'Inactivo'}</span></td>
       <td>
-        <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalProducto(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>
-        <button class="btn btn-sm btn-outline-danger" onclick="eliminarProducto(${p.id_producto})"><i class="bi bi-trash"></i></button>
+        <button class="btn-icon edit" onclick='abrirModalProducto(${JSON.stringify(p)})' title="Editar"><i class="bi bi-pencil"></i></button>
+        <button class="btn-icon del" onclick="eliminarProducto(${p.id_producto})" title="Eliminar" style="margin-left:.35rem;"><i class="bi bi-trash"></i></button>
       </td>
     </tr>`).join('');
 }
@@ -1035,18 +1270,34 @@ function filtrarTablaProductos(q) {
   renderTablaProductos(filtrados);
 }
 
-function abrirModalProducto(prod = null) {
-  if (!todasCategorias.length) cargarCategorias();
-  document.getElementById('prodId').value          = prod?.id_producto || '';
-  document.getElementById('prodNombre').value       = prod?.nombre || '';
+async function abrirModalProducto(prod = null) {
+  // Asegurarse de tener categorias cargadas ANTES de abrir el modal
+  if (!todasCategorias.length) {
+    await cargarCategorias();
+  }
+
+  // Llenar el select con las categorias actuales
+  const select = document.getElementById('prodCategoria');
+  select.innerHTML = todasCategorias.map(c =>
+    `<option value="${c.id_categoria}">${c.nombre_categoria}</option>`
+  ).join('');
+
+  // Asignar valores del producto
+  document.getElementById('prodId').value           = prod?.id_producto || '';
+  document.getElementById('prodNombre').value        = prod?.nombre || '';
   document.getElementById('prodPrecioCompra').value  = prod?.precio_compra || '';
   document.getElementById('prodPrecioVenta').value   = prod?.precio_venta || '';
   document.getElementById('prodStock').value         = prod?.stock_actual || 0;
   document.getElementById('prodStockMin').value      = prod?.stock_minimo || 5;
   document.getElementById('prodCodigo').value        = prod?.codigo_barra || '';
-  document.getElementById('prodCategoria').value     = prod?.id_categoria || (todasCategorias[0]?.id_categoria || '');
   document.getElementById('prodDescripcion').value   = prod?.descripcion || '';
   document.getElementById('modalProductoTitulo').textContent = prod ? 'Editar Producto' : 'Nuevo Producto';
+
+  // Asignar categoria DESPUES de llenar el select
+  if (prod?.id_categoria) {
+    select.value = prod.id_categoria;
+  }
+
   new bootstrap.Modal(document.getElementById('modalProducto')).show();
 }
 
@@ -1066,12 +1317,11 @@ async function guardarProducto() {
   else     await api('/productos', { method:'POST', body: JSON.stringify(body) });
   bootstrap.Modal.getInstance(document.getElementById('modalProducto')).hide();
   cargarProductos();
+  toast('Producto guardado correctamente', 'success');
 }
 
 async function eliminarProducto(id) {
-  if (!confirm('¿Eliminar este producto?')) return;
-  await api(`/productos/${id}`, { method: 'DELETE' });
-  cargarProductos();
+  confirmar('Eliminar producto', '¿Estás seguro? Esta acción no se puede deshacer.', async function(){ await api('/productos/'+id, { method:'DELETE' }); cargarProductos(); toast('Producto eliminado'); }, 'danger');
 }
 
 // CATEGORIAS
@@ -1100,11 +1350,11 @@ function renderTablaCategorias(categorias) {
     <tr>
       <td><strong>${c.nombre_categoria}</strong></td>
       <td>${c.total_productos || 0}</td>
-      <td><span class="badge bg-${c.estado ? 'success':'secondary'}">${c.estado ? 'Activa':'Inactiva'}</span></td>
+      <td><span class="status-badge ${c.estado ? 'active':'inactive'}">${c.estado ? 'Activa':'Inactiva'}</span></td>
       <td>
         ${esAdmin
-          ? `<button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalCategoria(${JSON.stringify(c)})'><i class="bi bi-pencil"></i></button>
-             <button class="btn btn-sm btn-outline-danger" onclick="eliminarCategoria(${c.id_categoria})"><i class="bi bi-trash"></i></button>`
+          ? `<button class="btn-icon edit" onclick='abrirModalCategoria(${JSON.stringify(c)})' title="Editar"><i class="bi bi-pencil"></i></button>
+             <button class="btn-icon del" onclick="eliminarCategoria(${c.id_categoria})" title="Eliminar" style="margin-left:.35rem;"><i class="bi bi-trash"></i></button>`
           : '<span class="text-muted small">Solo admin</span>'}
       </td>
     </tr>`).join('');
@@ -1127,21 +1377,19 @@ function abrirModalCategoria(cat = null) {
 async function guardarCategoria() {
   const id = document.getElementById('catId').value;
   const nombre = document.getElementById('catNombre').value.trim();
-  if (!nombre) { alert('Ingresa el nombre de la categoría'); return; }
+  if (!nombre) { toast('Ingresa el nombre de la categoría', 'warning'); return; }
   const body = { nombre_categoria: nombre };
   const resp = id
     ? await api(`/categorias/${id}`, { method: 'PUT', body: JSON.stringify(body) })
     : await api('/categorias', { method: 'POST', body: JSON.stringify(body) });
-  if (resp.error) { alert(resp.error); return; }
+  if (resp.error) { toast(resp.error, 'error'); return; }
   bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
   cargarCategorias();
+  toast('Categoría guardada correctamente', 'success');
 }
 
 async function eliminarCategoria(id) {
-  if (!confirm('¿Eliminar esta categoría?')) return;
-  const resp = await api(`/categorias/${id}`, { method: 'DELETE' });
-  if (resp.error) { alert(resp.error); return; }
-  cargarCategorias();
+  confirmar('Eliminar categoría', '¿Estás seguro? Esta acción no se puede deshacer.', async function(){ var r = await api('/categorias/'+id,{method:'DELETE'}); if(r.error){toast(r.error,'error');}else{cargarCategorias();toast('Categoría eliminada','success');} }, 'danger');
 }
 
 function cargarCategoriasEnSelect() {
@@ -1181,8 +1429,8 @@ async function cargarProveedores() {
       <td>${p.correo || '-'}</td>
       <td>
         ${esAdmin
-          ? `<button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalProveedor(${JSON.stringify(p)})'><i class="bi bi-pencil"></i></button>
-             <button class="btn btn-sm btn-outline-danger" onclick="eliminarProveedor(${p.id_proveedor})"><i class="bi bi-trash"></i></button>`
+          ? `<button class="btn-icon edit" onclick='abrirModalProveedor(${JSON.stringify(p)})' title="Editar"><i class="bi bi-pencil"></i></button>
+             <button class="btn-icon del" onclick="eliminarProveedor(${p.id_proveedor})" title="Eliminar" style="margin-left:.35rem;"><i class="bi bi-trash"></i></button>`
           : '<span class="text-muted small">Solo admin</span>'}
       </td>
     </tr>
@@ -1202,21 +1450,19 @@ function abrirModalProveedor(prov = null) {
 async function guardarProveedor() {
   const id = document.getElementById('provId').value;
   const nombre = document.getElementById('provNombre').value.trim();
-  if (!nombre) return alert('Ingresa el nombre del proveedor');
+  if (!nombre) { toast('Ingresa el nombre del proveedor', 'warning'); return; }
   const body = { nombre, telefono: document.getElementById('provTelefono').value.trim(), correo: document.getElementById('provCorreo').value.trim() };
   const r = id
     ? await api(`/proveedores/${id}`, { method: 'PUT', body: JSON.stringify(body) })
     : await api('/proveedores', { method: 'POST', body: JSON.stringify(body) });
-  if (r.error) return alert(r.error);
+  if (r.error) { toast(r.error,'error'); return; }
   bootstrap.Modal.getInstance(document.getElementById('modalProveedor')).hide();
   cargarProveedores();
+  toast('Proveedor guardado correctamente','success');
 }
 
 async function eliminarProveedor(id) {
-  if (!confirm('¿Eliminar proveedor?')) return;
-  const r = await api(`/proveedores/${id}`, { method: 'DELETE' });
-  if (r.error) return alert(r.error);
-  cargarProveedores();
+  confirmar('Eliminar proveedor','¿Estás seguro?', async function(){ var r=await api('/proveedores/'+id,{method:'DELETE'}); if(r.error){toast(r.error,'error');}else{cargarProveedores();toast('Proveedor eliminado','success');} },'danger');
 }
 
 // CLIENTES
@@ -1235,8 +1481,8 @@ async function cargarClientes() {
       <td>${c.telefono || '-'}</td>
       <td>${c.correo || '-'}</td>
       <td>
-        <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalCliente(${JSON.stringify(c)})'><i class="bi bi-pencil"></i></button>
-        ${esAdmin ? `<button class="btn btn-sm btn-outline-danger" onclick="eliminarCliente(${c.id_cliente})"><i class="bi bi-trash"></i></button>` : ''}
+        <button class="btn-icon edit" onclick='abrirModalCliente(${JSON.stringify(c)})' title="Editar"><i class="bi bi-pencil"></i></button>
+        ${esAdmin ? `<button class="btn-icon del" onclick="eliminarCliente(${c.id_cliente})" title="Eliminar" style="margin-left:.35rem;"><i class="bi bi-trash"></i></button>` : ''}
       </td>
     </tr>
   `).join('');
@@ -1254,21 +1500,19 @@ function abrirModalCliente(cli = null) {
 async function guardarCliente() {
   const id = document.getElementById('cliId').value;
   const nombre = document.getElementById('cliNombre').value.trim();
-  if (!nombre) return alert('Ingresa el nombre del cliente');
+  if (!nombre) { toast('Ingresa el nombre del cliente','warning'); return; }
   const body = { nombre, telefono: document.getElementById('cliTelefono').value.trim(), correo: document.getElementById('cliCorreo').value.trim() };
   const r = id
     ? await api(`/clientes/${id}`, { method: 'PUT', body: JSON.stringify(body) })
     : await api('/clientes', { method: 'POST', body: JSON.stringify(body) });
-  if (r.error) return alert(r.error);
+  if (r.error) { toast(r.error,'error'); return; }
   bootstrap.Modal.getInstance(document.getElementById('modalCliente')).hide();
   cargarClientes();
+  toast('Cliente guardado correctamente','success');
 }
 
 async function eliminarCliente(id) {
-  if (!confirm('¿Eliminar cliente?')) return;
-  const r = await api(`/clientes/${id}`, { method: 'DELETE' });
-  if (r.error) return alert(r.error);
-  cargarClientes();
+  confirmar('Eliminar cliente','¿Estás seguro?', async function(){ var r=await api('/clientes/'+id,{method:'DELETE'}); if(r.error){toast(r.error,'error');}else{cargarClientes();toast('Cliente eliminado','success');} },'danger');
 }
 
 // COMPRAS
@@ -1306,7 +1550,7 @@ function agregarDetalleCompra() {
   const id_producto   = parseInt(document.getElementById('compraProducto').value, 10);
   const cantidad      = parseInt(document.getElementById('compraCantidad').value, 10);
   const precio_compra = parseFloat(document.getElementById('compraPrecio').value);
-  if (!id_producto || !cantidad || !precio_compra) return alert('Completa producto, cantidad y precio');
+  if (!id_producto || !cantidad || !precio_compra) { toast('Completa producto, cantidad y precio','warning'); return; }
   const existe = detalleCompra.find(i => i.id_producto === id_producto && Number(i.precio_compra) === Number(precio_compra));
   if (existe) existe.cantidad += cantidad;
   else detalleCompra.push({ id_producto, cantidad, precio_compra });
@@ -1343,11 +1587,12 @@ function renderDetalleCompra() {
 
 async function guardarCompra() {
   const id_proveedor = parseInt(document.getElementById('compraProveedor').value, 10);
-  if (!id_proveedor || !detalleCompra.length) return alert('Selecciona proveedor y agrega detalles');
+  if (!id_proveedor || !detalleCompra.length) { toast('Selecciona proveedor y agrega detalles','warning'); return; }
   const r = await api('/compras', { method: 'POST', body: JSON.stringify({ id_proveedor, detalle: detalleCompra }) });
-  if (r.error) return alert(r.error);
+  if (r.error) { toast(r.error,'error'); return; }
   bootstrap.Modal.getInstance(document.getElementById('modalCompra')).hide();
   cargarCompras();
+  toast('Compra registrada correctamente','success');
 }
 
 // REPORTES
@@ -1400,13 +1645,11 @@ async function cargarUsuarios() {
     <tr>
       <td>${u.nombre}</td>
       <td>${u.correo}</td>
-      <td><span class="badge bg-${u.rol === 'Administrador' ? 'primary' : 'secondary'}">${u.rol}</span></td>
-      <td><span class="badge bg-${u.estado ? 'success' : 'danger'}">${u.estado ? 'Activo' : 'Inactivo'}</span></td>
+      <td><span style="display:inline-flex;align-items:center;gap:.3rem;padding:.2rem .65rem;border-radius:20px;font-size:.75rem;font-weight:600;background:${u.rol==='Administrador'?'#eff6ff':'#f8fafc'};color:${u.rol==='Administrador'?'#2563eb':'#64748b'}">${u.rol}</span></td>
+      <td><span class="status-badge ${u.estado ? 'active' : 'inactive'}">${u.estado ? 'Activo' : 'Inactivo'}</span></td>
       <td>
-        <button class="btn btn-sm btn-outline-primary me-1" onclick='abrirModalUsuario(${JSON.stringify(u)})'><i class="bi bi-pencil"></i></button>
-        <button class="btn btn-sm btn-outline-warning" onclick="toggleUsuario(${u.id_usuario}, ${u.estado ? 'false' : 'true'})">
-          <i class="bi bi-power"></i>
-        </button>
+        <button class="btn-icon edit" onclick='abrirModalUsuario(${JSON.stringify(u)})' title="Editar"><i class="bi bi-pencil"></i></button>
+        <button class="btn-icon" onclick="toggleUsuario(${u.id_usuario}, ${u.estado ? 'false' : 'true'})" title="Activar/Desactivar" style="margin-left:.35rem;border-color:#f59e0b;color:#d97706;"><i class="bi bi-power"></i></button>
       </td>
     </tr>
   `).join('');
@@ -1431,18 +1674,19 @@ async function guardarUsuario() {
     correo: document.getElementById('usrCorreo').value.trim(),
     rol: document.getElementById('usrRol').value
   };
-  if (!payload.nombre || !payload.correo) return alert('Nombre y correo son requeridos');
+  if (!payload.nombre || !payload.correo) { toast('Nombre y correo son requeridos','warning'); return; }
   let r;
   if (id) {
     r = await api(`/auth/usuarios/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
   } else {
     const password = document.getElementById('usrPassword').value;
-    if (!password) return alert('Ingresa una contraseña');
+    if (!password) { toast('Ingresa una contraseña','warning'); return; }
     r = await api('/auth/registro', { method: 'POST', body: JSON.stringify({ ...payload, password }) });
   }
-  if (r.error) return alert(r.error);
+  if (r.error) { toast(r.error,'error'); return; }
   bootstrap.Modal.getInstance(document.getElementById('modalUsuario')).hide();
   cargarUsuarios();
+  toast('Usuario guardado correctamente','success');
 }
 
 async function toggleUsuario(id, estado) {
@@ -1466,25 +1710,26 @@ async function buscarProductoPOS(q) {
   const productos = await api(`/productos/buscar?q=${encodeURIComponent(q)}`);
   const cont = document.getElementById('posResultados');
   if (!productos.length) { cont.innerHTML = '<div class="col-12 text-muted small">Sin resultados</div>'; return; }
-  cont.innerHTML = productos.slice(0, 6).map(p => `
-    <div class="col-6 col-md-4">
-      <div class="pos-product-card ${p.stock_actual <= 0 ? 'stock-low' : ''}" onclick="agregarAlCarrito(${p.id_producto}, '${p.nombre.replace(/'/g,"\\'")}', ${p.precio_venta}, ${p.stock_actual})">
-        <div class="fw-semibold small">${p.nombre}</div>
-        <div class="d-flex justify-content-between mt-1">
-          <span class="text-primary fw-bold">Q ${(p.precio_venta||0).toFixed(2)}</span>
-          <span class="stock-badge ${p.stock_actual <= 0 ? 'critical' : p.stock_actual <= 20 ? 'critical' : p.stock_actual <= 50 ? 'warning' : 'ok'}" style="font-size:.72rem;">
-            Stock: ${p.stock_actual}
-          </span>
-        </div>
-      </div>
-    </div>`).join('');
+  cont.innerHTML = productos.slice(0, 12).map(p => {
+    var cls = p.stock_actual <= 0 ? 'critical' : p.stock_actual < 20 ? 'warning' : 'ok';
+    var stockLabel = p.stock_actual <= 0 ? 'Agotado' : p.stock_actual + ' uds';
+    var nombre = p.nombre.replace(/'/g, "\\'");
+    return '<div class="pos-product-card ' + (p.stock_actual <= 0 ? 'stock-low' : '') + '"' +
+      ' onclick="agregarAlCarrito(' + p.id_producto + ', \'' + nombre + '\', ' + p.precio_venta + ', ' + p.stock_actual + ')">' +
+      '<span class="pp-name" title="' + p.nombre + '">' + p.nombre + '</span>' +
+      '<div class="pp-bottom">' +
+        '<span class="pp-price">Q ' + (p.precio_venta||0).toFixed(2) + '</span>' +
+        '<span class="stock-badge ' + cls + '" style="font-size:.7rem;padding:.15rem .5rem;">' + stockLabel + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('');
 }
 
 function agregarAlCarrito(id, nombre, precio, stock) {
-  if (stock <= 0) { alert('Producto sin stock disponible'); return; }
+  if (stock <= 0) { toast('Producto sin stock disponible','warning'); return; }
   const existente = carritoItems.find(i => i.id === id);
   if (existente) {
-    if (existente.cantidad >= stock) { alert(`Stock máximo disponible: ${stock}`); return; }
+    if (existente.cantidad >= stock) { toast('Stock máximo disponible: '+stock,'warning'); return; }
     existente.cantidad++;
   } else {
     carritoItems.push({ id, nombre, precio, cantidad: 1, stock });
@@ -1497,7 +1742,7 @@ function cambiarCantidad(id, delta) {
   if (!item) return;
   item.cantidad += delta;
   if (item.cantidad <= 0) carritoItems = carritoItems.filter(i => i.id !== id);
-  if (item.cantidad > item.stock) { alert(`Stock máximo: ${item.stock}`); item.cantidad = item.stock; }
+  if (item.cantidad > item.stock) { toast('Stock máximo: '+item.stock,'warning'); item.cantidad = item.stock; }
   renderCarrito();
 }
 
@@ -1506,49 +1751,49 @@ function renderCarrito() {
   const total = carritoItems.reduce((s, i) => s + i.precio * i.cantidad, 0);
   document.getElementById('posTotal').textContent = total.toFixed(2);
   if (!carritoItems.length) {
-    cont.innerHTML = '<p class="text-muted text-center small py-3">Agrega productos desde la búsqueda</p>';
+    cont.innerHTML = '<div style="text-align:center;color:var(--gray-400);padding:2rem;font-size:.85rem;"><i class="bi bi-cart-x" style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>Agrega productos desde la búsqueda</div>';
     return;
   }
   cont.innerHTML = carritoItems.map(item => `
     <div class="cart-item">
-      <div class="flex-grow-1">
-        <div class="small fw-semibold">${item.nombre}</div>
-        <div class="small text-muted">Q ${item.precio.toFixed(2)} c/u</div>
+      <div style="flex:1;min-width:0;">
+        <div class="ci-name">${item.nombre}</div>
+        <div class="ci-price">Q ${item.precio.toFixed(2)} c/u</div>
       </div>
-      <div class="d-flex align-items-center gap-1">
-        <button class="btn btn-sm btn-outline-secondary px-2 py-0" onclick="cambiarCantidad(${item.id}, -1)">-</button>
-        <span class="fw-bold px-1">${item.cantidad}</span>
-        <button class="btn btn-sm btn-outline-secondary px-2 py-0" onclick="cambiarCantidad(${item.id}, 1)">+</button>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="cambiarCantidad(${item.id}, -1)">-</button>
+        <span style="font-weight:700;font-size:.9rem;min-width:20px;text-align:center;">${item.cantidad}</span>
+        <button class="qty-btn" onclick="cambiarCantidad(${item.id}, 1)">+</button>
       </div>
-      <div class="fw-bold text-primary ms-2">Q ${(item.precio * item.cantidad).toFixed(2)}</div>
+      <div class="ci-subtotal">Q ${(item.precio * item.cantidad).toFixed(2)}</div>
     </div>`).join('');
 }
 
 function limpiarCarrito() {
-  if (!confirm('¿Limpiar el carrito?')) return;
+  confirmar('Limpiar carrito','¿Quieres vaciar todos los productos del carrito?', function(){ carritoItems=[]; renderCarrito(); toast('Carrito limpiado','info'); },'warning'); return;
   carritoItems = [];
   renderCarrito();
 }
 
 async function finalizarVenta() {
-  if (!carritoItems.length) { alert('Agrega productos al carrito'); return; }
+  if (!carritoItems.length) { toast('Agrega productos al carrito','warning'); return; }
   const metodo = document.getElementById('posMetodoPago').value;
-  if (!metodo) { alert('Selecciona el método de pago'); return; }
-  if (!ventaActualId) { alert('Error: no hay venta activa'); return; }
+  if (!metodo) { toast('Selecciona el método de pago','warning'); return; }
+  if (!ventaActualId) { toast('Error: no hay venta activa','error'); return; }
   for (const item of carritoItems) {
     const r = await api('/ventas/agregar-producto', {
       method: 'POST',
       body: JSON.stringify({ id_venta: ventaActualId, id_producto: item.id, cantidad: item.cantidad })
     });
-    if (r.error) { alert('Error: ' + r.error); return; }
+    if (r.error) { toast('Error: ' + r.error,'error'); return; }
   }
   const r = await api('/ventas/finalizar', {
     method: 'POST',
     body: JSON.stringify({ id_venta: ventaActualId, metodo_pago: metodo })
   });
-  if (r.error) { alert('Error: ' + r.error); return; }
+  if (r.error) { toast('Error: ' + r.error,'error'); return; }
   const total = carritoItems.reduce((s, i) => s + i.precio * i.cantidad, 0);
-  alert(`✅ Venta #${ventaActualId} completada\nTotal: Q ${total.toFixed(2)}\nMétodo: ${metodo}`);
+  toast('Venta #'+ventaActualId+' completada — Q '+total.toFixed(2)+' ('+metodo+')','success');
   iniciarPOS();
 }
 
